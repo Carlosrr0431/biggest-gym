@@ -10,7 +10,8 @@ import TestimonialSlider from "./(components)/TestimonialSlider";
 import Link from "next/link";
 import SwiperGym from "./(components)/SwiperGym";
 import Logo from './public/logo biggest.svg'
-import Video from './public/3196220-hd_1920_1080_25fps.mp4'
+import Video from './public/portadaEscritorio.mp4'
+import VideoCelular from './public/portadaCelular.mp4'
 import { useAppContext } from "./(context)/AppWrapper";
 
 const Home = () => {
@@ -55,12 +56,12 @@ const Home = () => {
 
 
         <div className="xl:bg-right xl:bg-no-repeat w-full h-full  translate-z-50  absolute inset-0   -z-20    ">
-          <video src={Video} autoPlay muted loop className="object-cover h-[100%] w-[100%]" />
-
+          <video src={Video} autoPlay muted loop className="hidden sm:object-cover sm:h-[100%] sm:w-[100%] sm:flex" />
+          <video src={VideoCelular} autoPlay muted loop className="visible object-cover h-[100%] w-[100%] sm:hidden" />
           <Image src={Degradado}
             width={0}
 
-            height={0}
+            height={0}gigit gi
             alt=""
             className="w-full  h-full absolute z-20 inset-0 object-cover mix-blend-multiply" />
         </div>
