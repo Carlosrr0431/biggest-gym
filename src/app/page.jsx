@@ -18,7 +18,7 @@ const Home = () => {
 
   const [showModal, setShowModal] = useState(false);
   const container = useRef()
-  const { setCambioHeader} = useAppContext()
+  const { setCambioHeader } = useAppContext()
   const [scroll, setScroll] = useState(0)
 
 
@@ -61,7 +61,7 @@ const Home = () => {
           <Image src={Degradado}
             width={0}
 
-            height={0}gigit gi
+            height={0}
             alt=""
             className="w-full  h-full absolute z-20 inset-0 object-cover mix-blend-multiply" />
         </div>
@@ -83,7 +83,7 @@ const Home = () => {
         <Beneficios />
       </section>
 
-{/* 
+      {/* 
 
       <section className="h-[50%] w-[100%] bg-slate-600">
         <Sponsor />
