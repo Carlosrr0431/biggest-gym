@@ -117,7 +117,7 @@ const Accordion = ({ usuario }) => {
 
     if (usuario?.tipoPlan == "Plan x2") {
       setDiasPlan(8)
-    } else if (usuario?.tipoPlan == "Semi Intenso") {
+    } else if (usuario?.tipoPlan == "Plan x3") {
       setDiasPlan(12)
     } else if (usuario?.tipoPlan == "Plan Libre") {
       setDiasPlan(16)
@@ -301,7 +301,7 @@ const Accordion = ({ usuario }) => {
                 callbackUrl: "/",
               })
             }}
-            className={`flex  text-lg w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 text-white focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900 mt-[220px] mx-auto ml-8 font-semibold ${panel == 'Contenido' ? 'mt-[390px]' : ''}`}>
+            className={`flex  text-lg w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 text-white focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900 mt-[220px] mx-auto ml-8 font-semibold}`}>
             <div className="grid mr-2 place-items-center ">
               <TbLogout2 className="w-5 h-5" />
             </div>
