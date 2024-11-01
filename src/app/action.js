@@ -513,7 +513,7 @@ export async function adminUser(datos, tipo, id, precio, fechaCumpleaños) {
             dni: dni,
             edad: edad,
             tipoPlan: plan,
-            dias: data[0].dias,
+            dias: 0,
             fechaPago: moment()
               .tz("America/Argentina/Salta")
               .format("DD/MM/yyyy"),
