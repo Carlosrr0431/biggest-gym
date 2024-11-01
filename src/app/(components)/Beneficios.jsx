@@ -49,55 +49,55 @@ export const Beneficios = ({ scrollNum }) => {
 
 
     return (
-        <div ref={container} className='intro w-full h-full bg-rgb(178, 190, 181) overflow-y-hidden purple -mt-[100px]' >
+        <div ref={container} className='intro w-full h-full  overflow-y-hidden purple -mt-[100px]' >
             <div className='w-full h-full  '  >
                 <h1 className='bg-rgb(178, 190, 181) text-center flex justify-center text-[20px] -mb-[120px]   md:mt-10 md:mb-4 md:text-[30px] mx-auto'>NUESTROS BENEFICIOS</h1>
 
-                <section className="bg-background mt-[110px] md:mt-0  md:py-0 w-full h-full">
+                <section className="mt-[110px] md:mt-0  md:py-0 w-full h-full">
                     <div className="container mx-auto px-4">
                         <div className="grid grid-cols-2 gap-8 md:grid-cols-3">
-                            <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-card p-6 text-center shadow-lg transition-all duration-300 hover:scale-105">
+                            <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-card p-6 text-center shadow-lg transition-all duration-300 hover:scale-105 bg-slate-800">
                                 <Image src={Wifi} width={0} height={0} alt='' className='w-[48px] h-[48px] sm:w-[50px] sm:h-[50px] text-primary fill-#005b82 ' color='#005b82' />
                                 <h3 className="text-xl font-semibold text-gray-600">Wifi Gratis</h3>
 
                             </div>
-                            <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-card p-6 text-center shadow-lg transition-all duration-300 hover:scale-105">
+                            <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-card p-6 text-center shadow-lg transition-all duration-300 hover:scale-105 bg-slate-800">
                                 <Image src={Ducha} width={0} height={0} alt='' className='w-[48px] h-[48px] sm:w-[50px] sm:h-[50px]' />
                                 <h3 className="text-xl font-semibold text-gray-600">Duchas</h3>
 
                             </div>
-                            <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-card p-6 text-center shadow-lg transition-all duration-300 hover:scale-105">
+                            <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-card p-6 text-center shadow-lg transition-all duration-300 hover:scale-105 bg-slate-800">
                                 <Image src={Vestuario} width={0} height={0} alt='' className='w-[48px] h-[48px] sm:w-[50px] sm:h-[50px]' />
                                 <h3 className="text-xl font-semibold text-gray-600">Vestuario</h3>
 
                             </div>
-                            <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-card p-6 text-center shadow-lg transition-all duration-300 hover:scale-105">
+                            <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-card p-6 text-center shadow-lg transition-all duration-300 hover:scale-105 bg-slate-800">
                                 <Image src={Dispenser} width={0} height={0} alt='' className='w-[48px] h-[48px] sm:w-[50px] sm:h-[50px]' />
                                 <h3 className="text-xl font-semibold text-gray-600">Dispenser</h3>
 
                             </div>
-                            <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-card p-6 text-center shadow-lg transition-all duration-300 hover:scale-105">
+                            <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-card p-6 text-center shadow-lg transition-all duration-300 hover:scale-105 bg-slate-800">
                                 <Image src={Patologia} width={0} height={0} alt='' className='w-[48px] h-[48px] sm:w-[50px] sm:h-[50px]' />
                                 <h3 className="text-xl font-semibold text-gray-600">Patologias</h3>
 
                             </div>
-                            <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-card p-6 text-center shadow-lg transition-all duration-300 hover:scale-105">
+                            <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-card p-6 text-center shadow-lg transition-all duration-300 hover:scale-105 bg-slate-800">
                                 <Image src={Prevencion} width={0} height={0} alt='' className='w-[48px] h-[48px] sm:w-[50px] sm:h-[50px]' />
                                 <h3 className="text-xl font-semibold text-gray-600">Prevencion de lesiones</h3>
 
                             </div>
-                            <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-card p-6 text-center shadow-lg transition-all duration-300 hover:scale-105">
+                            <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-card p-6 text-center shadow-lg transition-all duration-300 hover:scale-105 bg-slate-800">
                                 <Image src={SalaAcondicionamiento} width={0} height={0} alt='' className='w-[48px] h-[48px] sm:w-[50px] sm:h-[50px]' />
                                 <h3 className="text-xl font-semibold text-gray-600">Programas personalizados</h3>
 
                             </div>
-                            <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-card p-6 text-center shadow-lg transition-all duration-300 hover:scale-105">
+                            <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-card p-6 text-center shadow-lg transition-all duration-300 hover:scale-105 bg-slate-800">
                                 <Image src={AltoRendimiento} width={0} height={0} alt='' className='w-[48px] h-[48px] sm:w-[50px] sm:h-[50px]' />
                                 <h3 className="text-xl font-semibold text-gray-600">Recuperación deportiva</h3>
 
                             </div>
 
-                            <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-card p-6 text-center shadow-lg transition-all duration-300 hover:scale-105">
+                            <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-card p-6 text-center shadow-lg transition-all duration-300 hover:scale-105 bg-slate-800">
                                 <Image src={Kinesiologia} width={0} height={0} alt='' className='w-[48px] h-[48px] sm:w-[50px] sm:h-[50px] text-white fill-white' color='#ffffff' />
 
                                 <h3 className="text-xl font-semibold text-gray-600">Kinesiología</h3>
