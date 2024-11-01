@@ -140,7 +140,6 @@ export const PreciosPlanes = () => {
 
             <input className="w-[250px] border items-start text-lg py-2 px-3 text-grey-darkest md:ml-0  focus:outline-none focus:bg-white/90 text-black focus:text-black  " placeholder='$' type="text" value={datos && datos['Super Intenso']?.precio} name="Super Intenso" id="superIntenso" onChange={handleInputChange} />
 
-
           </div>
 
           <div className='flex  mx-auto items-center justify-center  w-full relative'>
