@@ -126,7 +126,7 @@ export const PlanesPresenciales = () => {
                         <p class="mt-2 sm:mt-4">
 
                             {listaPrecios != undefined ? <div>
-                                <strong class="text-3xl font-bold text-gray-900 sm:text-4xl"> {planes == 'Plan x2' ? listaPrecios != undefined && listaPrecios[0].precio : planes == "Plan x3" ? listaPrecios != undefined && listaPrecios[1].precio : planes == 'Plan Libre' ? listaPrecios != undefined && listaPrecios[2].precio : ''} </strong>
+                                <strong class="text-3xl font-bold text-gray-900 sm:text-4xl"> {planes == 'Plan x2' ? listaPrecios != undefined && listaPrecios[2].precio : planes == "Plan x3" ? listaPrecios != undefined && listaPrecios[3].precio : planes == 'Plan Libre' ? listaPrecios != undefined && listaPrecios[4].precio : ''} </strong>
 
                                 <span class="text-sm font-medium text-gray-700">/mes</span></div> : <DotLoader
                                 color={color}
@@ -197,10 +197,10 @@ export const PlanesPresenciales = () => {
                             className={``}
                         >
                             <button class="w-full px-4 py-2 mt-10 tracking-wide text-black capitalize transition-colors duration-300 transform bg-fondo1 rounded-md hover:bg-black hover:text-yellow-500 focus:outline-none focus:bg-black focus:ring focus:ring-blue-300 focus:ring-opacity-80">
-                            Consultar por Bases y Condiciones
+                                Consultar por Bases y Condiciones
                             </button>
                         </Link>
-{/* 
+                        {/* 
                         {
                             session?.user?.name == undefined ? <button onClick={() => {
                                 signIn('google', {

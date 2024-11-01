@@ -1,274 +1,76 @@
-import { supabaseClient } from '@/supabase/client';
-import React, { useEffect, useState } from 'react'
+'use client'
+
+import { useState } from 'react'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { CalendarIcon } from 'lucide-react'
+
+// Simulación de datos
+const generateData = (month) => ({
+    planX2: { inscriptos: Math.floor(Math.random() * 100), total: Math.floor(Math.random() * 10000) },
+    planX3: { inscriptos: Math.floor(Math.random() * 100), total: Math.floor(Math.random() * 10000) },
+    planLibre: { inscriptos: Math.floor(Math.random() * 100), total: Math.floor(Math.random() * 10000) },
+    cursos: { inscriptos: Math.floor(Math.random() * 100), total: Math.floor(Math.random() * 10000) },
+})
 
 export const ControlIngresos = () => {
-    const [ingresos, setIngresos] = useState();
-    const [basico, setBasico] = useState({})
-    const [semiIntenso, setSemiIntenso] = useState({})
-    const [superIntenso, setSuperIntenso] = useState({})
-    const [ total, setTotal ] = useState()
-    const [cursos, setCursos] = useState({})
+    const [selectedMonth, setSelectedMonth] = useState('enero')
+    const data = generateData(selectedMonth)
 
-    useEffect(() => {
-        const getSupabaseOficial = async () => {
-            let data = await supabaseClient
-                .from("pagos")
-                .select("*").order('id', { ascending: true })
+    const totalInscriptos = Object.values(data).reduce((sum, plan) => sum + plan.inscriptos, 0)
+    const totalMonto = Object.values(data).reduce((sum, plan) => sum + plan.total, 0)
 
-            setIngresos(data.data)
-        }
-
-
-        getSupabaseOficial()
-    }, [])
-
-    useEffect(() => {
-
-        if (ingresos != undefined) {
-
-            let montoBasico = 0;
-            let cantidadBasico = 0;
-            let montoSemiIntenso = 0;
-            let cantidadSemiIntenso = 0;
-            let montoSuperIntenso = 0;
-            let cantidadSuperIntenso = 0;
-            let montoCursos = 0;
-            let cantidadCursos = 0;
-
-            ingresos.filter((elem, index) => {
-                if (elem.tipoPlan == "Basico") {
-                    montoBasico = montoBasico + Number(elem.monto.replace(/\./g, '').replace(/\$/g, '').replace(/[^0-9\.]/g, ''))
-                    cantidadBasico++;
-                }
-            })
-
-
-            ingresos.filter((elem, index) => {
-                if (elem.tipoPlan == "Semi Intenso") {
-                    montoSemiIntenso = montoSemiIntenso + Number(elem.monto.replace(/\./g, '').replace(/\$/g, '').replace(/[^0-9\.]/g, ''))
-                    cantidadSemiIntenso++;
-                }
-            })
-
-            ingresos.filter((elem, index) => {
-                if (elem.tipoPlan == "Super Intenso") {
-                    montoSuperIntenso = montoSuperIntenso + Number(elem.monto.replace(/\./g, '').replace(/\$/g, '').replace(/[^0-9\.]/g, ''))
-                    cantidadSuperIntenso++;
-                }
-            })
-
-
-            ingresos.filter((elem, index) => {
-                if (elem.tipoPlan != "Super Intenso" && elem.tipoPlan != "Semi Intenso" && elem.tipoPlan != "Basico") {
-                    montoCursos = montoCursos + Number(elem.monto.replace(/\./g, '').replace(/\$/g, '').replace(/[^0-9\.]/g, ''))
-                    cantidadCursos++;
-                }
-            })
-
-            setTotal( currencyFormatter(montoBasico + montoSemiIntenso + montoSuperIntenso + montoCursos))
-
-            setBasico({
-                monto: currencyFormatter(montoBasico),
-                cantidad: cantidadBasico
-            })
-
-            setSemiIntenso({
-                monto: currencyFormatter(montoSemiIntenso),
-                cantidad: cantidadSemiIntenso
-            })
-
-            setSuperIntenso({
-                monto: currencyFormatter(montoSuperIntenso),
-                cantidad: cantidadSuperIntenso
-            })
-
-            setCursos({
-                monto: currencyFormatter(montoCursos),
-                cantidad: cantidadCursos
-            })
-        }
-
-    }, [ingresos])
-
-
-
-    function currencyFormatter(value) {
-        const formatter = new Intl.NumberFormat('es-AR', {
-            style: 'currency',
-            minimumFractionDigits: 0,
-            currency: 'ARS'
-        })
-        return formatter.format(Number(value))
-    }
-
+    const PlanCard = ({ title, inscriptos, total }) => (
+        <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="text-2xl font-bold">{inscriptos}</div>
+                <p className="text-xs text-muted-foreground">
+                    Total: ${total.toLocaleString()}
+                </p>
+            </CardContent>
+        </Card>
+    )
 
     return (
-        <div className='w-full h-full container '>
-            <div className=' grid grid-cols-3  gap-x-2  my-10'>
-
-
-
-                <div class="bg-white max-w-[250px] h-[250px] shadow overflow-hidden sm:rounded-lg mb-4">
-                    <div class="px-4 py-5 sm:px-6">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">
-                            Plan Basico
-                        </h3>
-
-                    </div>
-                    <div class="border-t border-gray-200">
-                        <dl>
-
-                            <div class="bg-gray-50 px-4 justify-center items-center py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                <dt class="text-sm font-medium text-gray-500">
-                                    Cantidad de inscriptos
-                                </dt>
-                                <dd class="mt-1 text-sm text-center items-center text-gray-900 sm:mt-0 sm:col-span-2">
-                                    {basico.cantidad}
-                                </dd>
-                            </div>
-                            <div class="bg-white px-4  justify-center items-center backdrop:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                <dt class="text-sm font-medium text-gray-500">
-                                    Monto Total
-                                </dt>
-                                <dd class="mt-1 text-sm text-center  items-center text-gray-900 sm:mt-0 sm:col-span-2">
-                                    {basico.monto}
-                                </dd>
-                            </div>
-
-                        </dl>
-                    </div>
-                </div>
-
-                <div class="bg-white max-w-[250px]  h-[250px] shadow overflow-hidden sm:rounded-lg mb-4">
-                    <div class="px-4 py-5 sm:px-6">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">
-                            Plan Semi Intenso
-                        </h3>
-
-                    </div>
-                    <div class="border-t border-gray-200">
-                        <dl>
-
-                            <div class="bg-gray-50 px-4 justify-center items-center py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                <dt class="text-sm font-medium text-gray-500">
-                                    Cantidad de inscriptos
-                                </dt>
-                                <dd class="mt-1 text-sm text-center items-center text-gray-900 sm:mt-0 sm:col-span-2">
-                                    {semiIntenso.cantidad}
-                                </dd>
-                            </div>
-                            <div class="bg-white px-4  justify-center items-center backdrop:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                <dt class="text-sm font-medium text-gray-500">
-                                    Monto Total
-                                </dt>
-                                <dd class="mt-1 text-sm text-center  items-center text-gray-900 sm:mt-0 sm:col-span-2">
-                                    {semiIntenso.monto}
-                                </dd>
-                            </div>
-
-                        </dl>
-                    </div>
-                </div>
-
-
-                <div class="bg-white max-w-[250px]  h-[250px] shadow overflow-hidden sm:rounded-lg mb-4">
-                    <div class="px-4 py-5 sm:px-6">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">
-                            Plan Super Intenso
-                        </h3>
-
-                    </div>
-                    <div class="border-t border-gray-200">
-                        <dl>
-
-                            <div class="bg-gray-50 px-4 justify-center items-center py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                <dt class="text-sm font-medium text-gray-500">
-                                    Cantidad de inscriptos
-                                </dt>
-                                <dd class="mt-1 text-sm text-center items-center text-gray-900 sm:mt-0 sm:col-span-2">
-                                    {superIntenso.cantidad}
-                                </dd>
-                            </div>
-                            <div class="bg-white px-4  justify-center items-center backdrop:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                <dt class="text-sm font-medium text-gray-500">
-                                    Monto Total
-                                </dt>
-                                <dd class="mt-1 text-sm text-center  items-center text-gray-900 sm:mt-0 sm:col-span-2">
-                                    {superIntenso.monto}
-                                </dd>
-                            </div>
-
-                        </dl>
-                    </div>
-                </div>
-
-                <div class="bg-white max-w-[250px]  h-[250px] shadow overflow-hidden sm:rounded-lg mb-4">
-                    <div class="px-4 py-5 sm:px-6">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">
-                            Cursos
-                        </h3>
-
-                    </div>
-                    <div class="border-t border-gray-200">
-                        <dl>
-
-                            <div class="bg-gray-50 px-4 justify-center items-center py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                <dt class="text-sm font-medium text-gray-500">
-                                    Cantidad de cursos comprados
-                                </dt>
-                                <dd class="mt-1 text-sm text-center items-center text-gray-900 sm:mt-0 sm:col-span-2">
-                                    {cursos.cantidad}
-                                </dd>
-                            </div>
-                            <div class="bg-white px-4  justify-center items-center backdrop:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                <dt class="text-sm font-medium text-gray-500">
-                                    Monto Total
-                                </dt>
-                                <dd class="mt-1 text-sm text-center  items-center text-gray-900 sm:mt-0 sm:col-span-2">
-                                    {cursos.monto}
-                                </dd>
-                            </div>
-
-                        </dl>
-                    </div>
-                </div>
-
-
-                <div class="bg-white max-w-[250px]  h-[250px] shadow overflow-hidden sm:rounded-lg mb-4">
-                    <div class="px-4 py-5 sm:px-6">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">
-                            Totales
-                        </h3>
-
-                    </div>
-                    <div class="border-t border-gray-200">
-                        <dl>
-
-                            {/* <div class="bg-gray-50 px-4 justify-center items-center py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                <dt class="text-sm font-medium text-gray-500">
-                                    Cantidad de cursos comprados
-                                </dt>
-                                <dd class="mt-1 text-sm text-center items-center text-gray-900 sm:mt-0 sm:col-span-2">
-                                    {cursos.cantidad}
-                                </dd>
-                            </div> */}
-                            <div class="bg-white px-4  justify-center items-center backdrop:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                <dt class="text-sm font-medium text-gray-500">
-                                    Monto Total
-                                </dt>
-                                <dd class="mt-1 text-sm text-center  items-center text-gray-900 sm:mt-0 sm:col-span-2">
-                                    {total}
-                                </dd>
-                            </div>
-
-                        </dl>
-                    </div>
-                </div>
-
-
-
+        <div className="p-8">
+            <div className="flex justify-between items-center mb-8">
+                <h1 className="text-3xl font-bold">Dashboard de Inscripciones</h1>
+                <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                    <SelectTrigger className="w-[180px]">
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        <SelectValue placeholder="Seleccionar mes" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'].map((month) => (
+                            <SelectItem key={month} value={month}>
+                                {month.charAt(0).toUpperCase() + month.slice(1)}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
             </div>
+
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <PlanCard title="Plan x2" inscriptos={data.planX2.inscriptos} total={data.planX2.total} />
+                <PlanCard title="Plan x3" inscriptos={data.planX3.inscriptos} total={data.planX3.total} />
+                <PlanCard title="Plan Libre" inscriptos={data.planLibre.inscriptos} total={data.planLibre.total} />
+                <PlanCard title="Cursos" inscriptos={data.cursos.inscriptos} total={data.cursos.total} />
+            </div>
+
+            <Card className="mt-8">
+                <CardHeader>
+                    <CardTitle>Total de Todos los Planes</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="text-2xl font-bold">Inscriptos: {totalInscriptos}</div>
+                    <p className="text-muted-foreground">
+                        Monto Total: ${totalMonto.toLocaleString()}
+                    </p>
+                </CardContent>
+            </Card>
         </div>
     )
 }
-

@@ -4,6 +4,9 @@ import { adminUser, userAdmin } from '../action';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { supabaseClient } from '@/supabase/client';
+import CalendarioFechaCumple from './CalendarioFechaCumple';
+import { format } from 'date-fns';
+import { es } from "date-fns/locale"
 
 export const ModalUsuarioAdm = ({ setShowModal, info }) => {
 
@@ -11,6 +14,28 @@ export const ModalUsuarioAdm = ({ setShowModal, info }) => {
     const [errorDni, setErrorDni] = useState("")
     const [errorTelefono, setErrorTelefono] = useState("")
     const [listaPrecios, setListaPrecios] = useState();
+    const [isFamilyPlan, setIsFamilyPlan] = useState(false);
+    const [isSemesterPlan, setIsSemesterPlan] = useState(false);
+    const [fecha, setFecha] = useState()
+    const [mes, setMes] = useState(new Date().getMonth())
+    const [ano, setAno] = useState(new Date().getFullYear())
+
+    const handleFamilyPlanChange = (event) => {
+        setIsFamilyPlan(event.target.checked);
+    };
+
+    function currencyFormatter(value) {
+        const formatter = new Intl.NumberFormat('es-AR', {
+            style: 'currency',
+            minimumFractionDigits: 0,
+            currency: 'ARS'
+        })
+        return formatter.format(Number(value))
+    }
+
+    const handleSemesterPlanChange = (event) => {
+        setIsSemesterPlan(event.target.checked);
+    };
 
     const [datos, setDatos] = useState({
         name: info.nombre,
@@ -19,7 +44,8 @@ export const ModalUsuarioAdm = ({ setShowModal, info }) => {
         edad: info.edad,
         telefono: info.telefono,
         dni: info.dni,
-        dias: info.dias
+        dias: info.dias,
+        fechaCumpleanos: info.fechaCumpleanos
 
     })
 
@@ -118,8 +144,9 @@ export const ModalUsuarioAdm = ({ setShowModal, info }) => {
                         precio = (listaPrecios[2].precio)
                     }
 
+                    const fechaCumpleaños = fecha && fecha.toLocaleDateString() || ""
 
-                    result = await adminUser(datos, info.tipo, info.id, precio)
+                    result = await adminUser(datos, info.tipo, info.id, precio, fechaCumpleaños)
                     console.log(result.message)
 
                     if (result.message == "Se agrego correctamente") {
@@ -161,14 +188,40 @@ export const ModalUsuarioAdm = ({ setShowModal, info }) => {
 
                         <div className="flex flex-col mb-4 relative">
                             <label for="plan" class="absolute left-0 ml-1 -translate-y-3 bg-black rounded-md  px-2 text-sm duration-100 ease-linear peer-placeholder-shown:translate-y-0 text-white peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:ml-1 peer-focus:-translate-y-3 peer-focus:px-1 peer-focus:text-sm">Plan</label>
-                            <select onChange={handleInputChange} required id="plan" name='plan' class="bg-gray-50 border ease-linear  border-gray-300 text-black text-grey-darkest  text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-3 px-3  w-full dark:bg-gray-700 focus:outline-none dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option selected>{datos.plan} | {datos.plan == 'Plan x2' ? listaPrecios != undefined && listaPrecios[0]?.precio : datos.plan == 'Plan x3' ? listaPrecios != undefined && listaPrecios[1]?.precio : datos.plan == 'Plan Libre' ? listaPrecios != undefined && listaPrecios[2]?.precio : null} </option>
-                                <option value="Plan x2" className={`font-bold ${datos.plan == 'Plan x2' ? 'hidden' : 'block'}`}>Plan x2 |  {listaPrecios != undefined && listaPrecios[0]?.precio}</option>
-                                <option value="Plan x3" className={`font-bold ${datos.plan == 'Plan x3' ? 'hidden' : 'block'}`}>Plan x3 | {listaPrecios != undefined && listaPrecios[1]?.precio}</option>
-                                <option value="Plan Libre" className={`font-bold ${datos.plan == 'Plan Libre' ? 'hidden' : 'block'}`}>Plan Libre | {listaPrecios != undefined && listaPrecios[2]?.precio}</option>
+                            {
+
+                                listaPrecios != null &&
+
+                                <select onChange={handleInputChange} required id="plan" name='plan' class="bg-gray-50 border ease-linear  border-gray-300 text-black text-grey-darkest  text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-3 px-3  w-full dark:bg-gray-700 focus:outline-none dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+
+                                    <option selected>{datos.plan} | {datos.plan == 'Plan x2' ? listaPrecios != undefined && isFamilyPlan ? currencyFormatter(parseInt((listaPrecios[0]?.precio.replace('$', '').replace(' ', '').replace('.', ''))) - parseInt((listaPrecios[0]?.precio.replace('$', '').replace(' ', '').replace('.', '')) * 0.10).toFixed(0)) : listaPrecios[0]?.precio + ' (Efectivo)' : datos.plan == 'Plan x3' ? listaPrecios != undefined && isFamilyPlan ? currencyFormatter(parseInt((listaPrecios[1]?.precio.replace('$', '').replace(' ', '').replace('.', ''))) - parseInt((listaPrecios[1]?.precio.replace('$', '').replace(' ', '').replace('.', '')) * 0.10).toFixed(0)) : listaPrecios[1]?.precio + ' (Efectivo)' : datos.plan == 'Plan Libre' ? listaPrecios != undefined && isFamilyPlan ? currencyFormatter(parseInt((listaPrecios[2]?.precio.replace('$', '').replace(' ', '').replace('.', ''))) - parseInt((listaPrecios[2]?.precio.replace('$', '').replace(' ', '').replace('.', '')) * 0.10).toFixed(0)) + ' (Efectivo)' : listaPrecios[2]?.precio + ' (Efectivo) ' : datos.plan == 'Plan x2 Transferencia' ? listaPrecios != undefined && isFamilyPlan ? currencyFormatter(parseInt((listaPrecios[3]?.precio.replace('$', '').replace(' ', '').replace('.', ''))) - parseInt((listaPrecios[3]?.precio.replace('$', '').replace(' ', '').replace('.', '')) * 0.10).toFixed(0)) : listaPrecios[3]?.precio : datos.plan == 'Plan x3 Transferencia' ? listaPrecios != undefined && isFamilyPlan ? currencyFormatter(parseInt((listaPrecios[4]?.precio.replace('$', '').replace(' ', '').replace('.', ''))) - parseInt((listaPrecios[4]?.precio.replace('$', '').replace(' ', '').replace('.', '')) * 0.10).toFixed(0)) : listaPrecios[4]?.precio : datos.plan == 'Plan Libre Transferencia' ? listaPrecios != undefined && isFamilyPlan ? currencyFormatter(parseInt((listaPrecios[5]?.precio.replace('$', '').replace(' ', '').replace('.', ''))) - parseInt((listaPrecios[5]?.precio.replace('$', '').replace(' ', '').replace('.', '')) * 0.10).toFixed(0)) : listaPrecios[5]?.precio : null} </option>
+
+                                    <option value="Plan x2" className={`font-bold ${datos.plan == 'Plan x2' ? 'hidden' : 'block'}`}>Plan x2 (Efectivo) |  {listaPrecios != undefined && isFamilyPlan ? currencyFormatter(parseInt((listaPrecios[0]?.precio.replace('$', '').replace(' ', '').replace('.', ''))) - parseInt((listaPrecios[0]?.precio.replace('$', '').replace(' ', '').replace('.', '')) * 0.10).toFixed(0)) : listaPrecios[0]?.precio} </option>
+
+                                    {/* <option value="Plan x3" className={`font-bold ${datos.plan == 'Plan x3' ? 'hidden' : 'block'}`}>Plan x3 (Efectivo) | {listaPrecios != undefined && listaPrecios[1]?.precio}</option> */}
+
+                                    <option value="Plan x3" className={`font-bold ${datos.plan == 'Plan x3' ? 'hidden' : 'block'}`}>Plan x3 (Efectivo) |  {listaPrecios != undefined && isFamilyPlan ? currencyFormatter(parseInt((listaPrecios[1]?.precio.replace('$', '').replace(' ', '').replace('.', ''))) - parseInt((listaPrecios[1]?.precio.replace('$', '').replace(' ', '').replace('.', '')) * 0.10).toFixed(0)) : listaPrecios[1]?.precio} </option>
+                                    {/* 
+                                    <option value="Plan Libre" className={`font-bold ${datos.plan == 'Plan Libre' ? 'hidden' : 'block'}`}>Plan Libre (Efectivo) | {listaPrecios != undefined && listaPrecios[2]?.precio}</option> */}
+                                    <option value="Plan Libre" className={`font-bold ${datos.plan == 'Plan Libre' ? 'hidden' : 'block'}`}>Plan Libre (Efectivo) |  {listaPrecios != undefined && isFamilyPlan ? currencyFormatter(parseInt((listaPrecios[2]?.precio.replace('$', '').replace(' ', '').replace('.', ''))) - parseInt((listaPrecios[2]?.precio.replace('$', '').replace(' ', '').replace('.', '')) * 0.10).toFixed(0)) : listaPrecios[2]?.precio} </option>
+
+                                    {/* <option value="Plan x2 Transferencia" className={`font-bold ${datos.plan == 'Plan x2 Transferencia' ? 'hidden' : 'block'}`}>Plan x2 (Transferencia) |  {listaPrecios != undefined && listaPrecios[3]?.precio} </option> */}
+
+                                    <option value="Plan x2 Transferencia" className={`font-bold ${datos.plan == 'Plan x2 Transferencia' ? 'hidden' : 'block'}`}>Plan x2 (Transferencia) |  {listaPrecios != undefined && isFamilyPlan ? currencyFormatter(parseInt((listaPrecios[3]?.precio.replace('$', '').replace(' ', '').replace('.', ''))) - parseInt((listaPrecios[3]?.precio.replace('$', '').replace(' ', '').replace('.', '')) * 0.10).toFixed(0)) : listaPrecios[3]?.precio} </option>
+
+                                    {/* <option value="Plan x3 Transferencia" className={`font-bold ${datos.plan == 'Plan x3 Transferencia' ? 'hidden' : 'block'}`}>Plan x3 (Transferencia) | {listaPrecios != undefined && listaPrecios[4]?.precio}</option> */}
+
+                                    <option value="Plan x3 Transferencia" className={`font-bold ${datos.plan == 'Plan x3 Transferencia' ? 'hidden' : 'block'}`}>Plan x3 (Transferencia) |  {listaPrecios != undefined && isFamilyPlan ? currencyFormatter(parseInt((listaPrecios[4]?.precio.replace('$', '').replace(' ', '').replace('.', ''))) - parseInt((listaPrecios[4]?.precio.replace('$', '').replace(' ', '').replace('.', '')) * 0.10).toFixed(0)) : listaPrecios[4]?.precio} </option>
+
+                                    {/* <option value="Plan Libre Transferencia" className={`font-bold ${datos.plan == 'Plan Libre Transferencia' ? 'hidden' : 'block'}`}>Plan Libre (Transferencia) | {listaPrecios != undefined && listaPrecios[5]?.precio}</option> */}
+
+                                    <option value="Plan Libre Transferencia" className={`font-bold ${datos.plan == 'Plan Libre Transferencia' ? 'hidden' : 'block'}`}>Plan Libre (Transferencia) |  {listaPrecios != undefined && isFamilyPlan ? currencyFormatter(parseInt((listaPrecios[5]?.precio.replace('$', '').replace(' ', '').replace('.', ''))) - parseInt((listaPrecios[5]?.precio.replace('$', '').replace(' ', '').replace('.', '')) * 0.10).toFixed(0)) : listaPrecios[5]?.precio} </option>
 
 
-                            </select>
+
+                                </select>
+
+                            }
                         </div>
 
 
@@ -179,7 +232,21 @@ export const ModalUsuarioAdm = ({ setShowModal, info }) => {
                             <label for="edad" class="absolute left-0 ml-1 -translate-y-3 bg-black rounded-md  px-2 text-sm duration-100 ease-linear peer-placeholder-shown:translate-y-0 text-white peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:ml-1 peer-focus:-translate-y-3 peer-focus:px-1 peer-focus:text-sm">Edad</label>
                             <input value={datos.edad} className="border text-lg py-2 px-3 text-grey-darkest md:ml-0  focus:outline-none focus:bg-white/90 text-black focus:text-black rounded-[5px]" placeholder='Edad' type="text" name="edad" id="edad" onChange={handleInputChange} />
                         </div>
+                        <div className="space-y-2">
+                            <div className="flex items-center space-x-2">
+                                <input
+                                    type="checkbox"
+                                    id="familyPlanCheckbox"
+                                    checked={isFamilyPlan}
+                                    onChange={handleFamilyPlanChange}
+                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                />
+                                <label htmlFor="familyPlanCheckbox" className="text-sm font-medium text-white dark:text-gray-300">
+                                    Plan Familiar
+                                </label>
+                            </div>
 
+                        </div>
                         <div className="flex flex-col mb-4 relative">
 
                             <h1 className='text-red-500 text-[15px] absolute w-full bottom-[45px] font-bold left-[95px]'>{errorTelefono}</h1>
@@ -192,6 +259,12 @@ export const ModalUsuarioAdm = ({ setShowModal, info }) => {
 
                             <label for="dias" class="absolute left-0 ml-1 -translate-y-3 bg-black rounded-md  px-2 text-sm duration-100 ease-linear peer-placeholder-shown:translate-y-0 text-white peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:ml-1 peer-focus:-translate-y-3 peer-focus:px-1 peer-focus:text-sm">Dia | opcional</label>
                             <input value={datos.dias} className="border text-lg py-2 px-3 text-grey-darkest md:ml-0  focus:outline-none focus:bg-white/90 text-black focus:text-black rounded-[5px]" placeholder='Dias del plan' type="number" name="dias" id="dias" onChange={handleInputChange} />
+                        </div>
+
+                        <div className="flex flex-col mb-4 relative">
+
+                            <label for="dias" class="absolute left-0 ml-2 -translate-y-3 bg-black rounded-md  px-2 text-sm duration-100 ease-linear peer-placeholder-shown:translate-y-0 text-white peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:ml-1 peer-focus:-translate-y-3 peer-focus:px-1 peer-focus:text-sm">Fecha de Cumpleaños </label>
+                            <CalendarioFechaCumple fecha={fecha} mes={mes} ano={ano} setFecha={setFecha} setMes={setMes} setAno={setAno} />
                         </div>
 
 

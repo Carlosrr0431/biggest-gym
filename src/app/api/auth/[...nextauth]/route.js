@@ -9,13 +9,13 @@ const handler = NextAuth({
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
 
       // authorization solo es para modo de desarrollo
-      // authorization: {
-      //   params: {
-      //     prompt: "consent",
-      //     access_type: "offline",
-      //     response_type: "code",
-      //   },
-      // },
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
 
       profile(profile) {
         return {

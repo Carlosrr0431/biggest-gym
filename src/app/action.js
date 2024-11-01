@@ -396,7 +396,7 @@ function checkTelef(cadena) {
   else return "No responde a la plantilla";
 }
 
-export async function adminUser(datos, tipo, id, precio) {
+export async function adminUser(datos, tipo, id, precio, fechaCumpleaños) {
   const cookieStore = cookies();
   let message = "";
   let error = [];
@@ -416,6 +416,7 @@ export async function adminUser(datos, tipo, id, precio) {
   const plan = datos?.plan;
   const edad = datos?.edad;
   const dias = datos?.dias;
+  const fecha = fechaCumpleaños;
 
   const err = checkTelef(telefono);
   error[0] = err;
@@ -435,6 +436,8 @@ export async function adminUser(datos, tipo, id, precio) {
     .from("usuarios")
     .select("*")
     .match({ email: email });
+
+  console.log("Fecha cumpleaños: " + fechaCumpleaños);
 
   const dataDni = result1.data;
   const data = result2.data;
@@ -457,7 +460,8 @@ export async function adminUser(datos, tipo, id, precio) {
         dias: 0,
         puntos: 0,
         role: "member",
-        dias: dias
+        dias: dias,
+        fechaCumpleanos: fecha,
       });
 
       const result3 = await supabase.from("pagos").insert({
@@ -487,7 +491,8 @@ export async function adminUser(datos, tipo, id, precio) {
           dni: dni,
           edad: edad,
           tipoPlan: plan,
-          dias: dias
+          dias: dias,
+          fechaCumpleanos: fecha,
         })
         .eq("id", id);
 
@@ -525,7 +530,7 @@ export async function adminUser(datos, tipo, id, precio) {
             dni: dni,
             edad: edad,
             tipoPlan: plan,
-            dias: dias
+            dias: dias,
           })
           .eq("id", id);
       }
@@ -594,10 +599,7 @@ export async function actualizarPlan(datos, precio, id) {
     }
   );
 
-
   console.log(datos.name, datos.email, datos.plan, datos.modoPago, precio);
-  
-
 
   const result3 = await supabase.from("pagos").insert({
     nombre: datos.name,
