@@ -100,15 +100,15 @@ export const PreciosPlanes = () => {
           precio: listaPrecios[2]?.precio
         },
         'Basico Transferencia': {
-          plan: 'Basico Transferencia transferencia',
+          plan: 'Basico Transferencia',
           precio: listaPrecios[3]?.precio
         },
         'Semi Intenso Transferencia': {
-          plan: 'Semi Intenso transferencia',
+          plan: 'Semi Intenso Transferencia',
           precio: listaPrecios[4]?.precio
         },
         'Super Intenso Transferencia': {
-          plan: 'Super Intenso transferencia',
+          plan: 'Super Intenso Transferencia',
           precio: listaPrecios[5]?.precio
         }
       })
@@ -135,7 +135,9 @@ export const PreciosPlanes = () => {
           <div className='flex  mx-auto items-center justify-center  w-full relative'>
             {/* (currencyFormatter(Number(datos['Basico'].precio))) */}
             <input ref={input1Ref} value={datos && datos['Basico']?.precio} className="w-[250px] border items-start text-lg py-2 px-3 text-grey-darkest md:ml-0  focus:outline-none focus:bg-white/90 text-black focus:text-black  " placeholder='$' type="text" name="Basico" id="basico" onChange={handleInputChange} />
+
             <input className="w-[250px] border items-start text-lg py-2 px-3 text-grey-darkest md:ml-0  focus:outline-none focus:bg-white/90 text-black focus:text-black  " placeholder='$' type="text" value={datos && datos['Semi Intenso']?.precio} name="Semi Intenso" id="semiIntenso" onChange={handleInputChange} />
+
             <input className="w-[250px] border items-start text-lg py-2 px-3 text-grey-darkest md:ml-0  focus:outline-none focus:bg-white/90 text-black focus:text-black  " placeholder='$' type="text" value={datos && datos['Super Intenso']?.precio} name="Super Intenso" id="superIntenso" onChange={handleInputChange} />
 
 
@@ -143,9 +145,11 @@ export const PreciosPlanes = () => {
 
           <div className='flex  mx-auto items-center justify-center  w-full relative'>
             {/* (currencyFormatter(Number(datos['Basico'].precio))) */}
-            <input ref={input1Ref} value={datos && datos['Basico Transferencia']?.precio} className="w-[250px] border items-start text-lg py-2 px-3 text-grey-darkest md:ml-0  focus:outline-none focus:bg-white/90 text-black focus:text-black  " placeholder='$' type="text" name="Basico transferencia" id="basico transferencia" onChange={handleInputChange} />
-            <input className="w-[250px] border items-start text-lg py-2 px-3 text-grey-darkest md:ml-0  focus:outline-none focus:bg-white/90 text-black focus:text-black  " placeholder='$' type="text" value={datos && datos['Semi Intenso Transferencia']?.precio} name="Semi Intenso transferencia" id="semiIntenso transferencia" onChange={handleInputChange} />
-            <input className="w-[250px] border items-start text-lg py-2 px-3 text-grey-darkest md:ml-0  focus:outline-none focus:bg-white/90 text-black focus:text-black  " placeholder='$' type="text" value={datos && datos['Super Intenso Transferencia']?.precio} name="Super Intenso transferencia" id="superIntenso transferencia" onChange={handleInputChange} />
+            <input value={datos && datos['Basico Transferencia']?.precio} className="w-[250px] border items-start text-lg py-2 px-3 text-grey-darkest md:ml-0  focus:outline-none focus:bg-white/90 text-black focus:text-black  " placeholder='$' type="text" name="Basico Transferencia" id="basico transferencia" onChange={handleInputChange} />
+
+            <input className="w-[250px] border items-start text-lg py-2 px-3 text-grey-darkest md:ml-0  focus:outline-none focus:bg-white/90 text-black focus:text-black  " placeholder='$' type="text" value={datos && datos['Semi Intenso Transferencia']?.precio} name="Semi Intenso Transferencia" id="semiIntenso transferencia" onChange={handleInputChange} />
+
+            <input className="w-[250px] border items-start text-lg py-2 px-3 text-grey-darkest md:ml-0  focus:outline-none focus:bg-white/90 text-black focus:text-black  " placeholder='$' type="text" value={datos && datos['Super Intenso Transferencia']?.precio} name="Super Intenso Transferencia" id="superIntenso transferencia" onChange={handleInputChange} />
 
 
           </div>
