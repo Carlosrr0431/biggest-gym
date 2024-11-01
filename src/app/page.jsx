@@ -83,18 +83,11 @@ const Home = () => {
         <Beneficios />
       </section>
 
-      {/* 
-
-      <section className="h-[50%] w-[100%] bg-slate-600">
-        <Sponsor />
-      </section> */}
-
-
 
       <section className="h-full w-[100%] bg-slate-800 ">
 
         <h1 className='bg-rgb(178, 190, 181) text-center flex justify-center text-[40px] mx-auto top-20 relative intro2'>Nuestros Testimonios</h1>
-        <TestimonialSlider />
+
       </section>
 
       <footer class="w-full bg-gray-900 h-[700px] sm:h-[320px]">

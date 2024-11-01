@@ -9,7 +9,7 @@ import { useEffect } from 'react'
 import { useState } from 'react';
 import { GiPrayer } from "react-icons/gi";
 import DashBoardInfoContenido from '@/app/(components)/DashBoardInfoContenido';
-import { TbChartInfographic } from "react-icons/tb";
+import { TbChartInfographic, TbLogout2 } from "react-icons/tb";
 import { FaBalanceScale } from "react-icons/fa";
 import { BiMoneyWithdraw } from "react-icons/bi";
 import { HiCog } from 'react-icons/hi2';
@@ -129,7 +129,7 @@ const DashBoard = () => {
             }
 
 
-            {/* <div role="button"
+            <div role="button"
               onClick={async () => {
                 await signOut({
                   callbackUrl: "/",
@@ -140,7 +140,7 @@ const DashBoard = () => {
                 <TbLogout2 className="w-5 h-5" />
               </div>
               Salir
-            </div> */}
+            </div>
 
           </nav>
         </div>
