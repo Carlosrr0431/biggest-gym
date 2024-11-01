@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { PiCaretDoubleDownLight } from "react-icons/pi";
 import { PiCaretDoubleUpLight } from "react-icons/pi";
-import { TbPointFilled } from "react-icons/tb";
+import { TbLogout2, TbPointFilled } from "react-icons/tb";
 import { BiSolidUserDetail } from "react-icons/bi";
 import { ModalUser } from "./ModalUser";
 import { useRouter } from "next/navigation";
@@ -295,7 +295,18 @@ const Accordion = ({ usuario }) => {
             }
           </div>
 
-
+          <div role="button"
+            onClick={async () => {
+              await signOut({
+                callbackUrl: "/",
+              })
+            }}
+            className={`flex  text-lg w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 text-white focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900 mt-[220px] mx-auto ml-8 font-semibold ${panel == 'Contenido' ? 'mt-[390px]' : ''}`}>
+            <div className="grid mr-2 place-items-center ">
+              <TbLogout2 className="w-5 h-5" />
+            </div>
+            Salir
+          </div>
 
 
         </div>

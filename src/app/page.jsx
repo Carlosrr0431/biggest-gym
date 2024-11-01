@@ -13,6 +13,7 @@ import Logo from './public/logo biggest.svg'
 import Video from './public/portadaEscritorio.mp4'
 import VideoCelular from './public/portadaCelular.mp4'
 import { useAppContext } from "./(context)/AppWrapper";
+import { VisionValores2 } from "./(components)/VisionValores2";
 
 const Home = () => {
 
@@ -87,7 +88,7 @@ const Home = () => {
       <section className="h-full w-[100%] bg-slate-800 ">
 
         <h1 className='bg-rgb(178, 190, 181) text-center flex justify-center text-[40px] mx-auto top-20 relative intro2'>Nuestros Testimonios</h1>
-
+        <VisionValores2 />
       </section>
 
       <footer class="w-full bg-gray-900 h-[700px] sm:h-[320px]">
