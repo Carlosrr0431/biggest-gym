@@ -1,5 +1,5 @@
 import { supabaseClient } from "@/supabase/client";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { PiCaretDoubleDownLight } from "react-icons/pi";
 import { PiCaretDoubleUpLight } from "react-icons/pi";
@@ -245,7 +245,7 @@ const Accordion = ({ usuario }) => {
 
 
 
-          {
+          {/* {
             <div>
               {usuario?.tipoPlan !== null ?
                 <button onClick={() => {
@@ -253,15 +253,7 @@ const Accordion = ({ usuario }) => {
 
                 }} className={`text-white bg-emerald-800  font-semibold p-2 mt-1 z-50 hover:bg-white hover:text-black ${renovarHandle() ? 'block' : 'hidden'}  rounded-md`}>  Renovar Plan </button>
 
-                // <Link
-
-                //   rel="noopener noreferrer"
-                //   target="_blank"
-                //   href="https://wa.me/+543876364202?text=Necesito renovar mi plan..."
-                //   className={`text-white bg-emerald-800  font-semibold p-2 mt-1 z-50 hover:bg-white hover:text-black ${renovarHandle() ? 'block' : 'hidden'}  rounded-md`}
-                // >
-                //   Renovar Plan
-                // </Link>
+     
                 : <button onClick={() => {
                   return setShowModal2(true)
 
@@ -269,7 +261,7 @@ const Accordion = ({ usuario }) => {
             </div>
 
 
-          }
+          } */}
 
           <div class="w-max  -mt-1 px-4">
 
