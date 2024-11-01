@@ -5,15 +5,13 @@ import Degradado from './public/capas.svg'
 import Socials from "./(components)/Socials";
 import { useEffect, useRef, useState } from "react";
 import { Beneficios } from "./(components)/Beneficios";
-import { Sponsor } from "./(components)/Sponsor";
-import TestimonialSlider from "./(components)/TestimonialSlider";
 import Link from "next/link";
 import SwiperGym from "./(components)/SwiperGym";
 import Logo from './public/logo biggest.svg'
 import Video from './public/portadaEscritorio.mp4'
 import VideoCelular from './public/portadaCelular.mp4'
 import { useAppContext } from "./(context)/AppWrapper";
-import { VisionValores2 } from "./(components)/VisionValores2";
+
 
 const Home = () => {
 
