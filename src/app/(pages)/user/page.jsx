@@ -39,7 +39,7 @@ const User = () => {
       .channel('usuarios')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'usuarios' }, (payload) => {
 
-        if (payload.eventType == 'UPDATE') {
+        if (payload.eventType == 'UPDATE' && session?.user?.email == payload.new.email) {
           return setUsuario(payload.new)
         }
       })
