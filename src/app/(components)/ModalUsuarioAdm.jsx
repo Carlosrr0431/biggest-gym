@@ -45,8 +45,6 @@ export const ModalUsuarioAdm = ({ setShowModal, info }) => {
         telefono: info.telefono,
         dni: info.dni,
         dias: info.dias,
-        fechaCumpleanos: info.fechaCumpleanos
-
     })
 
     const handleError = (errores) => {
@@ -144,9 +142,9 @@ export const ModalUsuarioAdm = ({ setShowModal, info }) => {
                         precio = (listaPrecios[2].precio)
                     }
 
-                    const fechaCumpleaños = fecha && fecha.toLocaleDateString() || ""
+                    // const fechaCumpleaños = fecha && fecha.toLocaleDateString() || ""
 
-                    result = await adminUser(datos, info.tipo, info.id, precio, fechaCumpleaños)
+                    result = await adminUser(datos, info.tipo, info.id, precio)
                     console.log(result.message)
 
                     if (result.message == "Se agrego correctamente") {
@@ -261,11 +259,11 @@ export const ModalUsuarioAdm = ({ setShowModal, info }) => {
                             <input value={datos.dias} className="border text-lg py-2 px-3 text-grey-darkest md:ml-0  focus:outline-none focus:bg-white/90 text-black focus:text-black rounded-[5px]" placeholder='Dias del plan' type="number" name="dias" id="dias" onChange={handleInputChange} />
                         </div>
 
-                        <div className="flex flex-col mb-4 relative">
+                        {/* <div className="flex flex-col mb-4 relative">
 
                             <label for="dias" class="absolute left-0 ml-2 -translate-y-3 bg-black rounded-md  px-2 text-sm duration-100 ease-linear peer-placeholder-shown:translate-y-0 text-white peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:ml-1 peer-focus:-translate-y-3 peer-focus:px-1 peer-focus:text-sm">Fecha de Cumpleaños </label>
                             <CalendarioFechaCumple fecha={fecha} mes={mes} ano={ano} setFecha={setFecha} setMes={setMes} setAno={setAno} />
-                        </div>
+                        </div> */}
 
 
 

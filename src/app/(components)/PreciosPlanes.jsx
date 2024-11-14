@@ -134,6 +134,7 @@ export const PreciosPlanes = () => {
         <form className="  w-full" action={() => (actionForm(), toast.success('El evento fue agregado con exito!!!'))} >
           <div className='flex  mx-auto items-center justify-center  w-full relative'>
             {/* (currencyFormatter(Number(datos['Basico'].precio))) */}
+            <h1 className='absolute left-0 ml-[40px]'>Efectivo</h1>
             <input ref={input1Ref} value={datos && datos['Basico']?.precio} className="w-[250px] border items-start text-lg py-2 px-3 text-grey-darkest md:ml-0  focus:outline-none focus:bg-white/90 text-black focus:text-black  " placeholder='$' type="text" name="Basico" id="basico" onChange={handleInputChange} />
 
             <input className="w-[250px] border items-start text-lg py-2 px-3 text-grey-darkest md:ml-0  focus:outline-none focus:bg-white/90 text-black focus:text-black  " placeholder='$' type="text" value={datos && datos['Semi Intenso']?.precio} name="Semi Intenso" id="semiIntenso" onChange={handleInputChange} />
@@ -144,6 +145,7 @@ export const PreciosPlanes = () => {
 
           <div className='flex  mx-auto items-center justify-center  w-full relative'>
             {/* (currencyFormatter(Number(datos['Basico'].precio))) */}
+            <h1 className='absolute left-0 ml-[20px] '>Transferencia</h1>
             <input value={datos && datos['Basico Transferencia']?.precio} className="w-[250px] border items-start text-lg py-2 px-3 text-grey-darkest md:ml-0  focus:outline-none focus:bg-white/90 text-black focus:text-black  " placeholder='$' type="text" name="Basico Transferencia" id="basico transferencia" onChange={handleInputChange} />
 
             <input className="w-[250px] border items-start text-lg py-2 px-3 text-grey-darkest md:ml-0  focus:outline-none focus:bg-white/90 text-black focus:text-black  " placeholder='$' type="text" value={datos && datos['Semi Intenso Transferencia']?.precio} name="Semi Intenso Transferencia" id="semiIntenso transferencia" onChange={handleInputChange} />

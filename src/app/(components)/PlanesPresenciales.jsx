@@ -126,7 +126,7 @@ export const PlanesPresenciales = () => {
                         <p class="mt-2 sm:mt-4">
 
                             {listaPrecios != undefined ? <div>
-                                <strong class="text-3xl font-bold text-gray-900 sm:text-4xl"> {planes == 'Plan x2' ? listaPrecios != undefined && listaPrecios[2].precio : planes == "Plan x3" ? listaPrecios != undefined && listaPrecios[3].precio : planes == 'Plan Libre' ? listaPrecios != undefined && listaPrecios[4].precio : ''} </strong>
+                                <strong class="text-3xl font-bold text-gray-900 sm:text-4xl"> {planes == 'Plan x2' ? listaPrecios != undefined && listaPrecios[3].precio : planes == "Plan x3" ? listaPrecios != undefined && listaPrecios[4].precio : planes == 'Plan Libre' ? listaPrecios != undefined && listaPrecios[5].precio : ''} </strong>
 
                                 <span class="text-sm font-medium text-gray-700">/mes</span></div> : <DotLoader
                                 color={color}
@@ -154,41 +154,54 @@ export const PlanesPresenciales = () => {
                             </button>
                         </Link> */}
                         {
-                            session?.user?.name == undefined ? <button onClick={() => {
-                                signIn('google', {
-                                    callbackUrl: "/planes"
-                                })
-                            }} class="w-full px-4 py-2 mt-10 tracking-wide text-black capitalize transition-colors duration-300 transform bg-fondo1 rounded-md hover:bg-black hover:text-yellow-500 focus:outline-none focus:bg-black focus:ring focus:ring-blue-300 focus:ring-opacity-80">
-                                Ingresá para avanzar (Gmail)
-                            </button> : <button onClick={() => {
-                                let precio;
 
-                                if (planes == "Plan x2") {
-                                    precio = Number((listaPrecios[0].precio.replace(/\s+/g, '')).replace(/[$.]/g, ''))
-                                } else if (planes == "Plan x3") {
-                                    precio = Number((listaPrecios[1].precio.replace(/\s+/g, '')).replace(/[$.]/g, ''))
-                                } else if (planes == "Plan Libre") {
-                                    precio = Number((listaPrecios[2].precio.replace(/\s+/g, '')).replace(/[$.]/g, ''))
-                                }
+                            <Link
 
-                                return handleSubmit(planes, precio)
-                            }} class="w-full px-4 py-2 mt-10 tracking-wide text-black capitalize transition-colors duration-300 transform bg-fondo1 rounded-md hover:bg-black hover:text-yellow-500 focus:outline-none focus:bg-black focus:ring focus:ring-blue-300 focus:ring-opacity-80">
-                                Comprar
-                            </button>
+                                rel="noopener noreferrer"
+                                target="_blank"
+                                href="https://wa.me/+543876364202?text=Necesito renovar mi plan..."
+                                className={``}
+                            >
+                                <button class="w-full px-4 py-2 mt-10 tracking-wide text-black capitalize transition-colors duration-300 transform bg-fondo1 rounded-md hover:bg-black hover:text-yellow-500 focus:outline-none focus:bg-black focus:ring focus:ring-blue-300 focus:ring-opacity-80">
+                                    Consultar por más informacion
+                                </button>
+                            </Link>
+                            // session?.user?.name == undefined ? <button onClick={() => {
+                            //     signIn('google', {
+                            //         callbackUrl: "/planes"
+                            //     })
+                            // }} class="w-full px-4 py-2 mt-10 tracking-wide text-black capitalize transition-colors duration-300 transform bg-fondo1 rounded-md hover:bg-black hover:text-yellow-500 focus:outline-none focus:bg-black focus:ring focus:ring-blue-300 focus:ring-opacity-80">
+                            //     Ingresá para avanzar (Gmail)
+                            // </button> : <button onClick={() => {
+                            //     let precio;
+
+                            //     if (planes == "Plan x2") {
+                            //         precio = Number((listaPrecios[0].precio.replace(/\s+/g, '')).replace(/[$.]/g, ''))
+                            //     } else if (planes == "Plan x3") {
+                            //         precio = Number((listaPrecios[1].precio.replace(/\s+/g, '')).replace(/[$.]/g, ''))
+                            //     } else if (planes == "Plan Libre") {
+                            //         precio = Number((listaPrecios[2].precio.replace(/\s+/g, '')).replace(/[$.]/g, ''))
+                            //     }
+
+                            //     return handleSubmit(planes, precio)
+                            // }} class="w-full px-4 py-2 mt-10 tracking-wide text-black capitalize transition-colors duration-300 transform bg-fondo1 rounded-md hover:bg-black hover:text-yellow-500 focus:outline-none focus:bg-black focus:ring focus:ring-blue-300 focus:ring-opacity-80">
+                            //     Comprar
+                            // </button>
                         }
 
                     </div>
 
-                    <div class="w-full mb-[180px]  sm:mb-0 p-8 space-y-8 text-center bg-white rounded-lg">
+                    <div class="w-full mb-[180px]  flex flex-col justify-between sm:mb-0 p-8  text-center bg-white rounded-lg">
                         <p class="font-medium text-gray-800 uppercase text-center">Lesiones</p>
 
                         <p class="mt-2 sm:mt-4">
-                            <strong class="text-3xl font-bold text-center text-gray-900 sm:text-4xl"> $34300 </strong>
+                            {/* <strong class="text-3xl font-bold text-center text-gray-900 sm:text-4xl"> $34300 </strong> */}
 
-                            <span class="text-sm font-medium text-gray-700">/mes</span>
+                            {/* <span class="text-sm font-medium text-gray-700">/mes</span> */}
+                            
                         </p>
 
-                        <p class="font-medium text-gray-500 dark:text-gray-300">Incluye 2 clases por semana</p>
+                        <p class="font-medium text-gray-500 dark:text-gray-300">Readaptación de lesiones.</p>
                         <Link
 
                             rel="noopener noreferrer"

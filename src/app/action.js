@@ -395,7 +395,7 @@ function checkTelef(cadena) {
   else return "No responde a la plantilla";
 }
 
-export async function adminUser(datos, tipo, id, precio, fechaCumpleaños) {
+export async function adminUser(datos, tipo, id, precio) {
   const cookieStore = cookies();
   let message = "";
   let error = [];
@@ -415,7 +415,7 @@ export async function adminUser(datos, tipo, id, precio, fechaCumpleaños) {
   const plan = datos?.plan;
   const edad = datos?.edad;
   const dias = datos?.dias;
-  const fecha = fechaCumpleaños;
+  // const fecha = fechaCumpleaños;
 
   const err = checkTelef(telefono);
   error[0] = err;
@@ -436,7 +436,7 @@ export async function adminUser(datos, tipo, id, precio, fechaCumpleaños) {
     .select("*")
     .match({ email: email });
 
-  console.log("Fecha cumpleaños: " + fechaCumpleaños);
+  // console.log("Fecha cumpleaños: " + fechaCumpleaños);
 
   const dataDni = result1.data;
   const data = result2.data;
@@ -460,7 +460,7 @@ export async function adminUser(datos, tipo, id, precio, fechaCumpleaños) {
         puntos: 0,
         role: "member",
         dias: dias,
-        fechaCumpleanos: fecha,
+        // fechaCumpleanos: fecha,
       });
 
       const result3 = await supabase.from("pagos").insert({
@@ -491,7 +491,7 @@ export async function adminUser(datos, tipo, id, precio, fechaCumpleaños) {
           edad: edad,
           tipoPlan: plan,
           dias: dias,
-          fechaCumpleanos: fecha,
+          // fechaCumpleanos: fecha,
         })
         .eq("id", id);
 
