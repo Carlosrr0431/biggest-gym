@@ -369,7 +369,7 @@ export const Usuarios = () => {
                                 if (e.dias >= 12)
                                     return true
                                 else return false
-                            } else if (e.tipoPlan == "Super Intenso") {
+                            } else if (e.tipoPlan == "Plan Libre") {
                                 if (e.dias >= 16)
                                     return true
                                 else return false

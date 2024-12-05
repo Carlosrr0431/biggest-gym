@@ -39,5 +39,5 @@ export default async function middleware(req, event) {
 }
 
 export const config = {
-  matcher: ["/dashboard/administrador", "/dashboayarnrd/user", "/user"],
+  matcher: ["/dashboard/administrador", "/dashboard/user", "/user"],
 };

@@ -95,7 +95,7 @@ const User = () => {
   return (
     <div className='w-full h-full bg-slate-900 overflow-x-scroll'>
 
-      <div className="p-4 bg-gradient-to-r relative top-[5%] from-cyan-500 to-blue-500  rounded-lg xl:w-[50%] px-4 w-[95%] mx-auto ">
+      <div className=" bg-gradient-to-r relative top-[5%] from-cyan-500 to-blue-500  rounded-lg xl:w-[50%] w-[95%] mx-auto ">
         <Accordion
           title="Do you prefer Android or iOS"
           answer="I like to use iOS products"

@@ -95,7 +95,7 @@ export const Usuario = ({ elem, setShowModal3, setTipo, setIdEvento, setShowModa
             </td>
             <td className="p-4 border-b border-blue-gray-50">
                 <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                    23/04/12
+                    {elem.created_at.substr(0, 10).split('-').reverse().join('/')}
                 </p>
             </td>
             <td className="p-4 border-b border-blue-gray-50">
@@ -154,7 +154,7 @@ export const Usuario = ({ elem, setShowModal3, setTipo, setIdEvento, setShowModa
 
 
 
-                    className={`relative h-10 max-h-[40px] align-middle w-10 max-w-[40px] select-none rounded-lg text-center  font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ${autorizado ? 'visible' : "hidden"}`}
+                    className={`relative h-10 max-h-[40px] align-middle w-10 max-w-[40px] select-none rounded-lg text-center  font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none`}
                     type="button">
                     <TiUserDelete className='items-center absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-[20px] h-[20px] text-red-800' />
                 </button>
@@ -312,7 +312,7 @@ export const Usuario = ({ elem, setShowModal3, setTipo, setIdEvento, setShowModa
                         Ya ingreso  <span className="relative border-l-[1px] border-gray-800 h-full py-4 px-1 text-center items-center"></span>   <span className="text-white">{(elem.horaIngreso)}</span>
 
 
-                    </button>)) : (elem.tipoPlan == 'Plan Libre' && (establecerFecha(elem.fechaPago) >= 31 || elem.dias > 31)) ? (<button
+                    </button>)) : (elem.tipoPlan == 'Plan Libre' && (establecerFecha(elem.fechaPago) >= 31 || elem.dias >= 31)) ? (<button
                         onClick={() => {
                             setShowModal2(true),
                                 setInfo({
