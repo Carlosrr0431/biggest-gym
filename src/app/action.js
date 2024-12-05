@@ -579,6 +579,7 @@ export async function registrarIngreso(dias, id) {
 
       horaIngreso: moment().tz("America/Argentina/Salta").format("HH:mm"),
       fechaIngreso: moment().tz("America/Argentina/Salta").format("DD/MM/yyyy"),
+      ingresoApp: "Ingreso permitido",
     })
     .eq("id", id);
 

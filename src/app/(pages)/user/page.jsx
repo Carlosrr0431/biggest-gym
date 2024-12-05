@@ -8,6 +8,7 @@ import Image from 'next/image'
 import tasas from '../../public/taza.png'
 import { supabaseClient } from '@/supabase/client'
 
+
 const User = () => {
 
   const { data: session } = useSession()
