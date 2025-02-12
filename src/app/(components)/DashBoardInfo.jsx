@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react'
 import { UsuariosAdm } from './UsuariosAdm'
 import { PreciosPlanes } from './PreciosPlanes'
 import { Ingresos } from './Ingresos'
-import { ControlIngresos } from './ControlIngresos'
+import ControlIngresos from './ControlIngresos'
+
 
 
 const DashBoardInfo = ({ tipo }) => {

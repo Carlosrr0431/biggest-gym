@@ -322,7 +322,7 @@ export const Usuarios = () => {
                             </th>
                             <th className={`p-4 border-y border-blue-gray-100 bg-blue-gray-50/50 `}>
                                 <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                                    {estado == "Lista" ? "" : "Ingreso"}
+                                    {estado == "Lista" ? "" : "Fecha de Pago"}
                                 </p>
                             </th>
                             <th className={`p-4 border-y border-blue-gray-100 bg-blue-gray-50/50 `}>

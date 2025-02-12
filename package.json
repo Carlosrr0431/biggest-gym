@@ -55,6 +55,7 @@
     "react-icons": "^5.0.1",
     "react-scroll-parallax": "^3.4.5",
     "react-spinners": "^0.14.1",
+    "recharts": "^2.15.1",
     "sonner": "^1.4.32",
     "swiper": "^11.0.7",
     "tailwind-merge": "^2.5.4",

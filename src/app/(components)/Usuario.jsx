@@ -95,7 +95,7 @@ export const Usuario = ({ elem, setShowModal3, setTipo, setIdEvento, setShowModa
             </td>
             <td className="p-4 border-b border-blue-gray-50">
                 <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                    {elem.created_at.substr(0, 10).split('-').reverse().join('/')}
+                    {elem.fechaPago}
                 </p>
             </td>
             <td className="p-4 border-b border-blue-gray-50">
