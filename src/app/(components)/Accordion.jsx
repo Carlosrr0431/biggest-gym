@@ -98,10 +98,13 @@ const Accordion = ({ usuario }) => {
 
     console.log("USUARIO FECHA PAGO: " + usuario?.fechaPago);
 
-    const startDate = moment(usuario?.fechaPago, "DD/MM/YYYY")
+
+    const startDate = moment.tz(usuario?.fechaPago, "DD/MM/YYYY", "America/Argentina/Salta")
 
     // Calculate expiration date (always 31 days from start date)
     const expirationDate = moment(startDate).add(31, "days")
+
+    console.log("FECHA DE VENCIMIENTO: " + expirationDate.format("DD/MM/YYYY"));
 
     // Format expiration date as dd/mm/yyyy
     setFormattedExpirationDate(expirationDate.format("DD/MM/YYYY"))
@@ -192,8 +195,8 @@ const Accordion = ({ usuario }) => {
 
                   <div className=" mt-2  transform rounded-md bg-gray-800 px-3 py-2 text-sm text-white shadow-lg">
                     <div className="flex flex-col gap-1">
-                 
-                      <p className="flex items-center gap-2">
+
+                      <p className="flex items-center gap-2 text-white font-semibold">
                         {/* Clock icon */}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -210,9 +213,9 @@ const Accordion = ({ usuario }) => {
                           <circle cx="12" cy="12" r="10"></circle>
                           <polyline points="12 6 12 12 16 14"></polyline>
                         </svg>
-                        Vence: {formattedExpirationDate} 
+                        Vence: {formattedExpirationDate}
                       </p>
-                      <p className="flex items-center gap-2">
+                      <p className="flex items-center gap-2 text-white/60 font-semibold">
                         {/* Clock icon */}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -232,7 +235,7 @@ const Accordion = ({ usuario }) => {
                         {daysRemaining <= 0 ? "¡Tu plan ha vencido!" : `Quedan ${daysRemaining} días para el vencimiento`}
                       </p>
                     </div>
-                   
+
                   </div>
 
                 </div>
