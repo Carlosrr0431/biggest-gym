@@ -660,7 +660,19 @@ export async function actualizarNotificacion(tipo, id, dias) {
       .eq("id", id);
 
     console.log(result2);
+  } else if (tipo == "Rechazar Ingreso") {
+    const result2 = await supabase
+      .from("usuarios")
+      .update({
+        ingresoApp: "Ingreso Rechazado",
+      })
+      .eq("id", id);
+
+    console.log(result2);
   }
+
+
+ 
 
   // const result2 = await supabase
   //   .from("usuarios")

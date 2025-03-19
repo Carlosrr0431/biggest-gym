@@ -15,6 +15,7 @@ import moment from 'moment-timezone';
 import Image from "next/image";
 
 
+
 const Accordion = ({ usuario }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const { data: session } = useSession()
@@ -25,6 +26,9 @@ const Accordion = ({ usuario }) => {
   const [showModal2, setShowModal2] = useState(false)
   const [listaPrecios, setListaPrecios] = useState();
   const [info, setInfo] = useState({})
+  const [formattedExpirationDate, setFormattedExpirationDate] = useState("")
+  const [daysRemaining, setDaysRemaining] = useState(0)
+  const [showTooltip, setShowTooltip] = useState(false)
 
   const router = useRouter()
 
@@ -51,6 +55,9 @@ const Accordion = ({ usuario }) => {
     } else
       return 1
   }
+
+
+
 
 
 
@@ -81,6 +88,35 @@ const Accordion = ({ usuario }) => {
 
   }, [usuario?.tipoPlan])
 
+
+
+  useEffect(() => {
+    // Parse the start date from dd/mm/yyyy format using Moment.js
+
+
+
+
+    console.log("USUARIO FECHA PAGO: " + usuario?.fechaPago);
+
+    const startDate = moment(usuario?.fechaPago, "DD/MM/YYYY")
+
+    // Calculate expiration date (always 31 days from start date)
+    const expirationDate = moment(startDate).add(31, "days")
+
+    // Format expiration date as dd/mm/yyyy
+    setFormattedExpirationDate(expirationDate.format("DD/MM/YYYY"))
+
+    // Calculate days remaining from today until expiration date
+    const today = moment()
+    const diffDays = expirationDate.diff(today, "days")
+
+    console.log("DIF DAYS: " + diffDays);
+
+    setDaysRemaining(diffDays)
+
+  }, [usuario?.fechaPago])
+
+
   useEffect(() => {
 
     const fechaResult = establecerFecha(usuario?.fechaIngreso)
@@ -105,6 +141,17 @@ const Accordion = ({ usuario }) => {
   }, [usuario?.fechaIngreso, usuario?.id])
 
 
+  function addDaysToDate(dateStr, daysToAdd) {
+    // Parse the date string (dd/mm/yyyy) using Moment.js
+    const date = moment(dateStr, 'DD/MM/YYYY');
+
+    // Add the specified number of days
+    date.add(daysToAdd, 'days');
+
+    // Format the result back to dd/mm/yyyy
+    return date.format('DD/MM/YYYY');
+  }
+
   return (
 
     <div className="w-full max-w-[100%]  bg-white/10 backdrop-blur-sm border-none rounded-lg shadow-lg overflow-hidden">
@@ -117,7 +164,7 @@ const Accordion = ({ usuario }) => {
                 {usuario?.nombre}
               </h2>
               <div className="flex items-center justify-center sm:justify-start space-x-2 mt-2 sm:mt-1">
-                <div className="flex">
+                <div className="flex justify-around w-full items-center">
                   <div class="w-max -mt-1">
 
                     {usuario?.dias >= diasPlan && usuario?.tipoPlan !== null ? (<div
@@ -141,6 +188,51 @@ const Accordion = ({ usuario }) => {
                     )
 
                     }
+                  </div>
+
+                  <div className=" mt-2  transform rounded-md bg-gray-800 px-3 py-2 text-sm text-white shadow-lg">
+                    <div className="flex flex-col gap-1">
+                 
+                      <p className="flex items-center gap-2">
+                        {/* Clock icon */}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="h-4 w-4"
+                        >
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        Vence: {formattedExpirationDate} 
+                      </p>
+                      <p className="flex items-center gap-2">
+                        {/* Clock icon */}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="h-4 w-4"
+                        >
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        {daysRemaining <= 0 ? "¡Tu plan ha vencido!" : `Quedan ${daysRemaining} días para el vencimiento`}
+                      </p>
+                    </div>
+                   
                   </div>
 
                 </div>

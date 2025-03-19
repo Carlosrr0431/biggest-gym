@@ -422,10 +422,10 @@ export const Usuarios = () => {
                                 <td className="p-4 border-b border-blue-gray-50 ">
                                     <button
                                         onClick={async () => {
-                                            await actualizarNotificacion(elem.dias + 1, elem.id), toast.custom((t) => (
+                                            await actualizarNotificacion("Rechazar Ingreso", elem.id, elem.dias + 1), toast.custom((t) => (
                                                 <div className='bg-white p-4 rounded-md text-black relative'>
                                                     <button className='' onClick={() => toast.dismiss(t)}><AiOutlineClose className='w-4 h-4  absolute left-[92%] top-[10%]' /></button>
-                                                    <span className='text-green-800'>{elem.nombre}</span> Ya puede ingresar al Gym
+                                                    <span className='text-green-800'>{elem.nombre}</span> Se cancelo el ingreso al gym
                                                 </div>
                                             ), {
                                                 position: 'top-center',
