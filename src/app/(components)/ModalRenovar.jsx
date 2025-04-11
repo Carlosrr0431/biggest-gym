@@ -1,15 +1,16 @@
 "use client"
 import { HiOutlineXMark } from 'react-icons/hi2';
 import { actualizarPlan, adminUser, userAdmin } from '../action';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { AiOutlineClose } from "react-icons/ai";
 import { supabaseClient } from '@/supabase/client';
+import { Loader2 } from 'lucide-react';
 
 export const ModalRenovar = ({ setShowModal2, info }) => {
 
     const [listaPrecios, setListaPrecios] = useState();
-
+    const [flagBoton, setFlagBoton] = useState(true)
     const [datos, setDatos] = useState({
         name: info.nombre,
         plan: info.plan,
@@ -17,6 +18,10 @@ export const ModalRenovar = ({ setShowModal2, info }) => {
         email: info.email
     })
 
+    const [isLoading, setIsLoading] = useState(false)
+    const [formSubmitted, setFormSubmitted] = useState(false)
+    const [responseData, setResponseData] = useState(null)
+    const formRef = useRef(null)
 
     const handleInputChange = (event) => {
         // console.log(event.target.name)
@@ -44,6 +49,50 @@ export const ModalRenovar = ({ setShowModal2, info }) => {
 
     }, [])
 
+
+    useEffect(() => {
+        if (!isLoading && formSubmitted && formRef.current) {
+            formRef.current.reset()
+        }
+    }, [isLoading, formSubmitted])
+
+    async function handleSubmit(e) {
+
+        e.preventDefault()
+        if (isLoading) return // Prevent submission if already loading
+
+        setIsLoading(true)
+        setFormSubmitted(false)
+        let precio;
+        setFlagBoton(false)
+
+        if (datos.plan == "Plan x2") {
+            precio = (listaPrecios[0]?.precio)
+        } else if (datos.plan == "Plan x3") {
+            precio = (listaPrecios[1]?.precio)
+        } else if (datos.plan == "Plan Libre") {
+            precio = (listaPrecios[2]?.precio)
+        }
+
+        await actualizarPlan(datos, precio, info.id)
+
+        setFormSubmitted(true)
+        setIsLoading(false)
+        toast.custom((t) => (
+            <div className='bg-white p-4 rounded-md text-black relative'>
+                <button className='' onClick={() => toast.dismiss(t)}><AiOutlineClose className='w-4 h-4  absolute left-[92%] top-[10%]' /></button>
+                <span className='text-green-800'>{datos.name}</span> ya tiene su plan actualizado
+            </div>
+        ), {
+            position: 'top-center',
+            duration: 5000
+        });
+
+        setFlagBoton(true)
+
+        return setShowModal2(false)
+    }
+
     return (
 
 
@@ -51,7 +100,7 @@ export const ModalRenovar = ({ setShowModal2, info }) => {
             flex items-center justify-center h-full w-full  
             `}>
             <div className={`rounded-[10px] shadow-2xl  shadow-black/20 p-8 m-4 md:min-w-[700px] md:mx-auto bg-slate-800 `}>
-                <div className="flex justify-center">
+                <div className={`flex justify-center ${flagBoton ? 'invisible' : 'visible'}`}>
                     <h1 className="w-full text-center text-white items-center text-grey-darkest ">{info.tipo} Usuario</h1>
 
                     <div className="" onClick={() => setShowModal2(false)}>
@@ -62,35 +111,10 @@ export const ModalRenovar = ({ setShowModal2, info }) => {
                 {/* toast.success(`¡${datos.name} ya puede ingresar al gym!`, {
                         position: 'top-center',
                     }) */}
-                <form className="mb-4 py-4   w-full" action={async () => {
-
-                    let precio;
-
-                    if (datos.plan == "Plan x2") {
-                        precio = (listaPrecios[0]?.precio)
-                    } else if (datos.plan == "Plan x3") {
-                        precio = (listaPrecios[1]?.precio)
-                    } else if (datos.plan == "Plan Libre") {
-                        precio = (listaPrecios[2]?.precio)
-                    }
-
-                    await actualizarPlan(datos, precio, info.id)
 
 
-
-                    toast.custom((t) => (
-                        <div className='bg-white p-4 rounded-md text-black relative'>
-                            <button className='' onClick={() => toast.dismiss(t)}><AiOutlineClose className='w-4 h-4  absolute left-[92%] top-[10%]' /></button>
-                            <span className='text-green-800'>{datos.name}</span> ya tiene su plan actualizado
-                        </div>
-                    ), {
-                        position: 'top-center',
-                        duration: 5000
-                    });
-
-                    return setShowModal2(false)
-                }
-                } >
+                <form ref={formRef} className={`mb-4 py-4 w-full ${flagBoton ? 'visible' : 'hidden'}`} onSubmit={handleSubmit}
+                >
 
                     <div className='flex w-full '>
 
@@ -131,9 +155,27 @@ export const ModalRenovar = ({ setShowModal2, info }) => {
                     </div>
 
 
-                    <button className="block bg-teal hover:bg-teal-dark border-[2px]  border-solid border-white text-white uppercase text-lg relative top-[20px] mx-auto p-2 rounded-[5px] hover:bg-white hover:text-black w-full" type="submit"  >Renovar </button>
+                    <button className={`lock bg-teal hover:bg-teal-dark border-[2px]  border-solid border-white text-white uppercase text-lg relative top-[20px] mx-auto p-2 rounded-[5px] hover:bg-white hover:text-black w-full`} type="submit"  >Renovar </button>
 
                 </form>
+
+                <div
+
+                    className={`bg-gray-800  rounded-lg shadow-lg overflow-hidden ${!flagBoton ? 'visible' : 'hidden'}`}
+                >
+                    <div className="p-6 items-center flex justify-center w-full mx-auto">
+                        <div className="mb-6">
+
+                            <Loader2 className="h-12 w-12 text-white animate-spin" />
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
 
 
             </div>
