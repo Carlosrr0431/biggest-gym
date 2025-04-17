@@ -1,6 +1,6 @@
-import Sidebar from '@/app/(components)/SideBar'
+import Sidebar from '../../(components)/SideBar'
 import { LayoutDashboard, LifeBuoy, Package, Receipt } from 'lucide-react'
-import Loguear from '@/app/(components)/Loguear'
+import Loguear from '../../(components)/Loguear'
 import React from 'react'
 
 

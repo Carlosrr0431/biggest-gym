@@ -1,6 +1,6 @@
 "use client"
 
-import { supabaseClient } from '@/supabase/client'
+import { supabaseClient } from '../../supabase/client'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { getUsuarios } from '../lib/data'

@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import Imagenfondo1 from '../public/exercise-weights-iron-dumbbell-with-extra-plates.jpg'
 
 import { signIn, useSession, signOut } from 'next-auth/react'
-import { supabaseClient } from '@/supabase/client'
+import { supabaseClient } from '../../supabase/client'
 import { useRouter } from "next/navigation";
 import axios from 'axios'
 

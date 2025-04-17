@@ -8,7 +8,7 @@ import { useEffect } from 'react'
 
 import { useState } from 'react';
 import { GiPrayer } from "react-icons/gi";
-import DashBoardInfoContenido from '@/app/(components)/DashBoardInfoContenido';
+import DashBoardInfoContenido from '../../../(components)/DashBoardInfoContenido';
 import { TbChartInfographic, TbLogout2 } from "react-icons/tb";
 import { FaBalanceScale } from "react-icons/fa";
 import { BiMoneyWithdraw } from "react-icons/bi";

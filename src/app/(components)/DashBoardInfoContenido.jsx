@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import ModalEvento from './ModalEvento'
 import { TbCalendarPlus } from "react-icons/tb";
-import { supabaseClient } from '@/supabase/client'
+import { supabaseClient } from '../../supabase/client'
 import { ModalConfirmar } from './ModalConfirmar'
 import { ModalBanner } from './ModalBanner'
 

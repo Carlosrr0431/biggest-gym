@@ -4,7 +4,7 @@ import { actualizarPlan, adminUser, userAdmin } from '../action';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { AiOutlineClose } from "react-icons/ai";
-import { supabaseClient } from '@/supabase/client';
+import { supabaseClient } from '../../supabase/client';
 import { Loader2 } from 'lucide-react';
 
 export const ModalRenovar = ({ setShowModal2, info }) => {

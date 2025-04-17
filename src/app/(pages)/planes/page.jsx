@@ -1,7 +1,7 @@
 "use client"
 
 import React from 'react'
-import { PlanesPresenciales } from '@/app/(components)/PlanesPresenciales'
+import { PlanesPresenciales } from '../../(components)/PlanesPresenciales'
 
 const Planes = () => {
   return (

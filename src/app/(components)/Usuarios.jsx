@@ -1,4 +1,4 @@
-import { supabaseClient } from '@/supabase/client'
+import { supabaseClient } from '../../supabase/client'
 import React, { useEffect, useState } from 'react'
 import { IoLogoWhatsapp } from "react-icons/io";
 import { ModalUsuarioAdm } from './ModalUsuarioAdm';

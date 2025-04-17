@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useAppContext } from '../(context)/AppWrapper';
 import { toast } from 'sonner';
-import { supabaseClient } from '@/supabase/client';
+import { supabaseClient } from '../../supabase/client';
 
 export const PreciosPlanes = () => {
 

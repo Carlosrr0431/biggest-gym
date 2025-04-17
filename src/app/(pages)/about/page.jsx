@@ -1,7 +1,7 @@
 "use client"
 
-import About from '@/app/(components)/About'
-import { useAppContext } from '@/app/(context)/AppWrapper'
+import About from '../../(components)/About'
+import { useAppContext } from '../../(context)/AppWrapper'
 import React, { useRef, useState } from 'react'
 
 const AboutPage = () => {

@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import { Usuarios } from '@/app/(components)/Usuarios';
+import { Usuarios } from '../../../(components)/Usuarios';
 
 const User = () => {
 

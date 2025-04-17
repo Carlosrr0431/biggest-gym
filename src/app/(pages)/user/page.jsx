@@ -1,12 +1,12 @@
 "use client"
-import Accordion from '@/app/(components)/Accordion'
-import SwipperUser from '@/app/(components)/SwipperUser'
+import Accordion from '../../(components)/ui/accordion'
+import SwipperUser from '../../(components)/SwipperUser'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useRef, useState } from 'react'
 import pesas from '../../public/pesa.png'
 import Image from 'next/image'
 import tasas from '../../public/taza.png'
-import { supabaseClient } from '@/supabase/client'
+import { supabaseClient } from '../../../supabase/client'
 
 
 const User = () => {

@@ -13,7 +13,7 @@ import { Toaster, toast } from 'sonner'
 import { sendForm } from "../action.js";
 import { HiOutlineXMark } from "react-icons/hi2";
 import axios from "axios";
-import { supabaseClient } from "@/supabase/client.js";
+import { supabaseClient } from "../../supabase/client.js";
 import { useSession } from "next-auth/react";
 
 

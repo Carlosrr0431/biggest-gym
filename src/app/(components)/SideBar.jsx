@@ -13,7 +13,7 @@ import { BsPersonStanding } from "react-icons/bs";
 import { CardCursos } from './CardCursos';
 import { LuDumbbell } from "react-icons/lu";
 import { GiHieroglyphLegs } from "react-icons/gi";
-import { supabaseClient } from '@/supabase/client';
+import { supabaseClient } from '../../supabase/client';
 import { useSession } from 'next-auth/react';
 
 
