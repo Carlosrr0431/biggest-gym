@@ -5,6 +5,7 @@ import { motion, useMotionValue, useSpring } from "framer-motion";
 import { Button } from "../(components)/ui/button";
 import { Dumbbell } from "lucide-react";
 import videoSource from "../public/portadaEscritorio.mp4";
+import Link from "next/link";
 
 const phrase = "Movernos, movernos sanamente";
 
@@ -85,20 +86,26 @@ export function HeroSection() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 1.2, duration: 0.6 }}
         >
-          <Button className="relative bg-yellow-400 text-black font-bold px-8 py-4 rounded-full text-base sm:text-lg hover:bg-yellow-300 transition-all shadow-lg">
-            <span className="z-10 relative">Sumate</span>
-            <motion.span
-              className="absolute inset-0 rounded-full bg-white opacity-10"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1.3 }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                repeatType: "mirror",
-                ease: "easeInOut",
-              }}
-            />
-          </Button>
+          <Link
+            href={
+              "https://wa.me/+543876364202?text=Hola!!! Te escribo desde la Landing Page, y quiero saber más información sobre suscribirme a un plan."
+            }
+          >
+            <Button className="relative bg-yellow-400 text-black font-bold px-8 py-4 rounded-full text-base sm:text-lg hover:bg-yellow-300 transition-all shadow-lg">
+              <span className="z-10 relative">Sumate</span>
+              <motion.span
+                className="absolute inset-0 rounded-full bg-white opacity-10"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1.3 }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  repeatType: "mirror",
+                  ease: "easeInOut",
+                }}
+              />
+            </Button>
+          </Link>
         </motion.div>
       </div>
 
