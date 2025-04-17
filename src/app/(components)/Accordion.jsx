@@ -1,4 +1,4 @@
-import { supabaseClient } from "@/supabase/client";
+import { supabaseClient } from "../../supabase/client";
 import { signOut, useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { PiCaretDoubleDownLight } from "react-icons/pi";
