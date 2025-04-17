@@ -4,7 +4,7 @@ const nextConfig = {
   reactStrictMode: false,
   swcMinify: true,
   images: {
-    domains: ["res.cloudinary.com", "lh3.googleusercontent.com", "demos.creative-tim.com"],
+    domains: ["res.cloudinary.com", "lh3.googleusercontent.com", "demos.creative-tim.com", "images.unsplash.com"],
   },
   experimental: {
     serverActions: {

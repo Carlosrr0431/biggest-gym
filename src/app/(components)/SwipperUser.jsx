@@ -48,7 +48,7 @@ import { FaQuoteLeft } from "react-icons/fa";
 
 import { BsArrowRight } from "react-icons/bs";
 import Image from "next/image";
-import { supabaseClient } from '@/supabase/client';
+import { supabaseClient } from '../../supabase/client';
 import { useEffect, useState } from 'react';
 import { useAppContext } from '../(context)/AppWrapper';
 

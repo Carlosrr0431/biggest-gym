@@ -45,7 +45,7 @@ import "swiper/css/pagination";
 import { Navigation, Pagination, Autoplay, Scrollbar } from "swiper/modules";
 
 import Image from "next/image";
-import { supabaseClient } from '@/supabase/client';
+import { supabaseClient } from '../../../../biggest-gym/src/supabase/client';
 import { useEffect, useState } from 'react';
 import { useAppContext } from '../(context)/AppWrapper';
 
