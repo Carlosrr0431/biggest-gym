@@ -3,7 +3,7 @@ import { HiOutlineXMark } from 'react-icons/hi2';
 import { adminUser, userAdmin } from '../action';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { supabaseClient } from '@/supabase/client';
+import { supabaseClient } from '../../supabase/client';
 import CalendarioFechaCumple from './CalendarioFechaCumple';
 import { format } from 'date-fns';
 import { es } from "date-fns/locale"

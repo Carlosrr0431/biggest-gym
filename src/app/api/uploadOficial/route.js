@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
 import { v2 as cloudinary } from "cloudinary";
-import { connectToDB } from "@/app/lib/db";
-import Evento from "@/app/models/Evento";
+import { connectToDB } from "../../../app/lib/db";
+import Evento from "../../../app/models/Evento";
 
 cloudinary.config({
   cloud_name: "dlxwkq6bm",
