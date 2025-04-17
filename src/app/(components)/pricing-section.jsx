@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Check, ChevronLeft, ChevronRight, Dumbbell } from "lucide-react";
 import { Button } from "../(components)/ui/button";
+import Link from "next/link";
 
 const plans = [
   {
@@ -239,9 +240,16 @@ export function PricingSection() {
                         </motion.li>
                       ))}
                     </ul>
-                    <Button className="w-full py-6 text-lg bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-semibold">
-                      Consultar Por Más Información
-                    </Button>
+                    <Link
+                      href={
+                        "https://wa.me/+543876364202?text=Hola!!! Te escribo desde la Landing Page, y quiero saber más información sobre suscribirme a un plan."
+                      }
+                    >
+                      {" "}
+                      <Button className="w-full py-6 text-lg bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-semibold">
+                        Consultar Por Más Información
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </motion.div>
@@ -297,9 +305,17 @@ export function PricingSection() {
                     </motion.li>
                   ))}
                 </ul>
-                <Button className="w-full py-6 text-lg bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-semibold mt-auto">
-                  Consultar Por Más Información
-                </Button>
+
+                <Link
+                  href={
+                    "https://wa.me/+543876364202?text=Hola!!! Te escribo desde la Landing Page, y quiero saber más información sobre suscribirme a un plan."
+                  }
+                >
+                  {" "}
+                  <Button className="w-full py-6 text-lg bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-semibold mt-auto">
+                    Consultar Por Más Información
+                  </Button>
+                </Link>
               </div>
             </motion.div>
           ))}
@@ -323,9 +339,16 @@ export function PricingSection() {
               </p>
             </div>
             <div className="w-full md:w-auto text-center">
-              <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-blue-900 text-base font-semibold leading-snug break-words">
-                Consultar Por Bases Y Condiciones
-              </Button>
+              <Link
+                href={
+                  "https://wa.me/+543876364202?text=Hola!!! Te escribo desde la Landing Page, y quiero saber más información sobre suscribirme a un plan."
+                }
+              >
+                {" "}
+                <Button className="w-full bg-yellow-400 hover:bg-yellow-500 text-blue-900 text-base font-semibold leading-snug break-words">
+                  Consultar Por Bases Y Condiciones
+                </Button>
+              </Link>
             </div>
           </div>
         </motion.div>
