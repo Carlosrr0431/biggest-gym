@@ -1,5 +1,5 @@
 "use client"
-import Accordion from '../../(components)/ui/accordion'
+import Accordion from '../../(components)/Accordion'
 import SwipperUser from '../../(components)/SwipperUser'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useRef, useState } from 'react'
