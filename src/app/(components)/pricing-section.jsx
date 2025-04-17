@@ -151,7 +151,7 @@ export function PricingSection() {
         </motion.div>
 
         {/* Plan Navigation */}
-        <div className="flex justify-center mb-12 overflow-x-auto py-2">
+        <div className="flex justify-center mb-12 overflow-x-auto py-2 lg:hidden">
           <div className="bg-white rounded-full shadow-lg p-1 flex">
             {plans.map((plan, index) => (
               <motion.button
