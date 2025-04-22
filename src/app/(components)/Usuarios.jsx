@@ -338,7 +338,7 @@ export const Usuarios = () => {
                     .map((elem, index) => (
                       <tr
                         key={index}
-                        className="even:bg-gray-800 hover:bg-gray-700 transition duration-200"
+                        className="bg-gray-800 hover:bg-gray-700 transition duration-200"
                       >
                         <td className="p-4 border-b border-gray-600">
                           <div className="flex items-center gap-3">
@@ -359,7 +359,7 @@ export const Usuarios = () => {
                             </div>
                           </div>
                         </td>
-                        <td className="p-4 border-b border-gray-600">
+                        <td className="p-4 border-b border-gray-600 ">
                           <button
                             onClick={async () => {
                               await actualizarNotificacion(

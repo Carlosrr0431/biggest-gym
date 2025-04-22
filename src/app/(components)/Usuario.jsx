@@ -32,7 +32,7 @@ export const Usuario = ({
 
   return (
     <tr className="">
-      <td className="p-4 border-b border-blue-gray-50 text-white">
+      <td className="p-4 border-b border-blue-gray-50 ">
         <div className="flex items-center gap-3">
           <Image
             width={0}
@@ -148,7 +148,7 @@ export const Usuario = ({
           target="_blank"
           // href="https://wa.me/+543878256529?text=Escribenos para poder orar por ti"
           href={`https://wa.me/+54${elem.telefono}`}
-          className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-200/10 active:bg-gray-200/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+          className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-white transition-all hover:bg-gray-200/10 active:bg-gray-200/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
         >
           <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
             <IoLogoWhatsapp className="w-7 h-7 transition-all hover:scale-110  focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] text-white" />
@@ -163,7 +163,7 @@ export const Usuario = ({
             setTipo("Eliminar Usuario");
             setIdEvento(elem.id);
           }}
-          className={`relative h-10 max-h-[40px] align-middle w-10 max-w-[40px] select-none rounded-lg text-center  font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-200/10 active:bg-gray-200/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none`}
+          className={`relative h-10 max-h-[40px] align-middle w-10 max-w-[40px] select-none rounded-lg text-center  font-sans text-xs font-medium uppercase text-white transition-all hover:bg-gray-200/10 active:bg-gray-200/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none`}
           type="button"
         >
           <TiUserDelete className="items-center absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-[20px] h-[20px] text-red-800" />
@@ -193,7 +193,7 @@ export const Usuario = ({
                   }
                 );
             }}
-            className="relative  min-h-[50px]  min-w-[60px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900"
+            className="relative  min-h-[50px]  min-w-[60px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-white"
             type="button"
           >
             <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 text-white/80 border-[1px] rounded-md border-gray-200 p-2 transition-all hover:bg-gray-200/10 active:bg-gray-200/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
@@ -278,7 +278,7 @@ export const Usuario = ({
                   }
                 );
             }}
-            className="relative  min-h-[50px]  min-w-[60px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900"
+            className="relative  min-h-[50px]  min-w-[60px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-white"
             type="button"
           >
             <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 text-white/80 border-[1px] rounded-md border-gray-200 p-2 transition-all hover:bg-gray-200/10 active:bg-gray-200/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
@@ -365,7 +365,7 @@ export const Usuario = ({
                   }
                 );
             }}
-            className="relative  min-h-[50px]  min-w-[60px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900"
+            className="relative  min-h-[50px]  min-w-[60px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-white"
             type="button"
           >
             <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 text-white/80 border-[1px] rounded-md border-gray-200 p-2 transition-all hover:bg-gray-200/10 active:bg-gray-200/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
