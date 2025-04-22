@@ -125,7 +125,7 @@ export const Usuario = ({
                 // fechaCumpleaños: elem.fechaCumpleaños
               });
           }}
-          className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-200/10 active:bg-gray-200/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+          className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase  transition-all hover:bg-gray-200/10 active:bg-gray-200/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none text-white"
           type="button"
         >
           <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
@@ -151,7 +151,7 @@ export const Usuario = ({
           className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-200/10 active:bg-gray-200/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
         >
           <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-            <IoLogoWhatsapp className="w-7 h-7 transition-all hover:scale-110  focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85]" />
+            <IoLogoWhatsapp className="w-7 h-7 transition-all hover:scale-110  focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] text-white" />
           </span>
         </Link>
       </td>
@@ -380,7 +380,7 @@ export const Usuario = ({
             onClick={() =>
               toast.custom(
                 (t) => (
-                  <div className="bg-white p-4 rounded-md text-black relative">
+                  <div className="bg-white p-4 rounded-md text-white relative">
                     <button className="" onClick={() => toast.dismiss(t)}>
                       <AiOutlineClose className="w-4 h-4  absolute left-[92%] top-[10%]" />
                     </button>
