@@ -22,47 +22,31 @@ import { ThemeProvider } from "./(components)/theme-provider";
 import { Dumbbell, Clock, Users, Trophy } from "lucide-react";
 
 const links = [
-  {
-    item: "Servicios",
-    link: "servicios",
-  },
-  {
-    item: "Por qué BG",
-    link: "porque",
-  },
-  {
-    item: "Planes",
-    link: "planes",
-  },
-  {
-    item: "Nuestro equipo",
-    link: "nosotros",
-  },
+  { item: "Servicios", link: "servicios" },
+  { item: "Por qué BG", link: "porque" },
+  { item: "Planes", link: "planes" },
+  { item: "Nuestro equipo", link: "nosotros" },
 ];
+
 export default function Home() {
-  // Refs for scroll animations
   const containerRef = useRef(null);
   const benefitsRef = useRef(null);
   const benefitsInView = useInView(benefitsRef, { once: false, amount: 0.2 });
 
-  // Scroll progress for parallax effects
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
 
-  // Smooth scroll progress
   const smoothProgress = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001,
   });
 
-  // Parallax values for different elements
   const benefitsY = useTransform(smoothProgress, [0, 0.3], [100, 0]);
   const benefitsOpacity = useTransform(smoothProgress, [0.1, 0.3], [0, 1]);
 
-  // Staggered animation for benefits
   const benefitVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: (i) => ({
@@ -76,7 +60,6 @@ export default function Home() {
     }),
   };
 
-  // Benefits data with icons
   const benefits = [
     {
       icon: <Dumbbell className="w-8 h-8 text-yellow-primary" />,
@@ -104,7 +87,6 @@ export default function Home() {
     },
   ];
 
-  // Cursor follower effect
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
@@ -113,7 +95,6 @@ export default function Home() {
     const handleMouseMove = (e) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
-
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
@@ -124,7 +105,6 @@ export default function Home() {
     animate(cursorY, mousePosition.y, springOptions);
   }, [mousePosition, cursorX, cursorY]);
 
-  // Fitness-themed floating elements
   const floatingElements = [
     {
       icon: <Dumbbell className="w-full h-full" />,
@@ -156,11 +136,10 @@ export default function Home() {
     <ThemeProvider attribute="class" defaultTheme="light">
       <div
         ref={containerRef}
-        className="relative overflow-hidden pb-16 lg:pb-0"
+        className="relative overflow-hidden pb-16 w-full h-screen overflow-y-auto"
       >
         <Header />
 
-        {/* Custom cursor effect */}
         <motion.div
           className="fixed w-8 h-8 rounded-full bg-yellow-primary/20 border border-yellow-primary/50 pointer-events-none z-50 hidden md:block"
           style={{
@@ -171,7 +150,6 @@ export default function Home() {
           }}
         />
 
-        {/* Floating fitness elements */}
         {floatingElements.map((element, index) => (
           <motion.div
             key={index}
@@ -191,13 +169,13 @@ export default function Home() {
               opacity: { duration: 1, delay: element.delay },
               y: {
                 duration: 4 + index,
-                repeat: Number.POSITIVE_INFINITY,
+                repeat: Infinity,
                 repeatType: "reverse",
                 delay: element.delay,
               },
               rotate: {
                 duration: 6 + index,
-                repeat: Number.POSITIVE_INFINITY,
+                repeat: Infinity,
                 repeatType: "reverse",
                 delay: element.delay,
               },
@@ -207,7 +185,6 @@ export default function Home() {
           </motion.div>
         ))}
 
-        {/* Animated background gradient */}
         <div className="fixed inset-0 -z-10 bg-gradient-to-b from-black-primary via-black-primary to-black-secondary">
           <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-[0.02] mix-blend-soft-light"></div>
           <div className="absolute top-0 -left-40 w-80 h-80 bg-yellow-primary/20 rounded-full blur-[100px] animate-pulse"></div>
@@ -217,14 +194,12 @@ export default function Home() {
           ></div>
         </div>
 
-        {/* Hero Section with enhanced animations */}
         <HeroSection />
 
-        {/* Benefits Section with parallax and staggered animations */}
         <motion.section
           ref={benefitsRef}
           id="porque"
-          className="py-24 relative overflow-hidden"
+          className="py-24 relative overflow-hidden min-h-screen"
           style={{
             y: benefitsY,
             opacity: benefitsOpacity,
@@ -232,7 +207,6 @@ export default function Home() {
         >
           <div className="absolute inset-0 bg-gradient-to-b from-black-primary/90 to-black-primary/70 backdrop-blur-sm"></div>
 
-          {/* Animated background elements */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-yellow-primary/10 rounded-full blur-[80px]"></div>
             <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-yellow-primary/10 rounded-full blur-[80px]"></div>
@@ -279,12 +253,10 @@ export default function Home() {
               </motion.p>
             </motion.div>
 
-            {/* Carousel for mobile and tablet */}
             <div className="lg:hidden">
               <BenefitsCarousel />
             </div>
 
-            {/* Desktop Grid with staggered animations */}
             <div className="hidden lg:grid lg:grid-cols-2 xl:grid-cols-4 gap-8">
               {benefits.map((benefit, index) => (
                 <motion.div
@@ -322,25 +294,22 @@ export default function Home() {
           </div>
         </motion.section>
 
-        {/* Services Section */}
-        <section id="servicios" className="w-full h-full">
+        <section id="servicios" className="w-full min-h-screen">
           <ServicesSection />
         </section>
 
-        {/* Pricing Section */}
-        <section id="planes" className="w-full h-full">
+        <section id="planes" className="w-full min-h-screen">
           <PricingSection />
         </section>
 
-        {/* Facilities Section */}
-        <FacilitiesSection />
+        <section className="w-full min-h-screen">
+          <FacilitiesSection />
+        </section>
 
-        {/* Staff Section */}
-        <section id="nosotros">
+        <section id="nosotros" className="w-full min-h-screen">
           <StaffSection />
         </section>
 
-        {/* Bottom Navigation for Mobile */}
         <BottomNavigation />
       </div>
     </ThemeProvider>

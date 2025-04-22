@@ -27,7 +27,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "src/app/(components)/ui/alert.jsx", "src/app/(components)/ui/alert-dialog.jsx", "src/app/(components)/ui/accordion.jsx"  ],
   "exclude": [
     "node_modules"
   ]

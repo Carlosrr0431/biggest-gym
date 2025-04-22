@@ -133,15 +133,17 @@ export default function Header() {
               whileTap={{ scale: 0.95 }}
               className="relative overflow-hidden"
             >
-              <Button className="bg-yellow-primary hover:bg-yellow-secondary text-black-primary px-4 sm:px-6 py-2 rounded-full font-medium transition-all duration-300 hover:shadow-lg hover:shadow-yellow-primary/25 relative overflow-hidden group">
-                <span className="relative z-10">Inscríbete</span>
-                <motion.span
-                  className="absolute inset-0 bg-white"
-                  initial={{ y: "100%" }}
-                  whileHover={{ y: 0 }}
-                  transition={{ duration: 0.3 }}
-                />
-              </Button>
+              <Link href={"/user"}>
+                <Button className="bg-yellow-primary hover:bg-yellow-secondary text-black-primary px-4 sm:px-6 py-2 rounded-full font-medium transition-all duration-300 hover:shadow-lg hover:shadow-yellow-primary/25 relative overflow-hidden group">
+                  <span className="relative z-10">Ingresar</span>
+                  <motion.span
+                    className="absolute inset-0 bg-white"
+                    initial={{ y: "100%" }}
+                    whileHover={{ y: 0 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </Button>
+              </Link>
             </motion.div>
           </div>
         </div>

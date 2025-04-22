@@ -21,7 +21,7 @@ const Dashboard = () => {
         //     >Ingresar como super usuario</button></Link>
         //     </div>
         // </div>
-        <div class="grid min-h-[140px] w-full place-items-center overflow-x-scroll  p-6 lg:overflow-visible bg-slate-800  h-full">
+        <div class="grid min-h-[140px] w-full place-items-center overflow-x-scroll  p-6 lg:overflow-visible bg-slate-800  h-full overflow-y-auto">
             <div class="flex  divide-x divide-gray-800 row items-center gap-x-2 justify-center place-content-center my-auto content-center w-full h-full">
 
                 <Link href='/dashboard/administrador'>

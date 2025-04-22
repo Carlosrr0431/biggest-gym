@@ -23,9 +23,7 @@ export default function RootLayout({ children }) {
         <Providers>
           <Suspense>
             <AppWrapper>
-              <main
-                className={` `}
-              >
+              <main className={``}>
                 {children}
               </main>
             </AppWrapper>

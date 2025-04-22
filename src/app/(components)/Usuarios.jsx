@@ -1,703 +1,760 @@
-import { supabaseClient } from '../../supabase/client'
-import React, { useEffect, useState } from 'react'
+import { supabaseClient } from "../../supabase/client";
+import React, { useEffect, useState } from "react";
 import { IoLogoWhatsapp } from "react-icons/io";
-import { ModalUsuarioAdm } from './ModalUsuarioAdm';
-import Link from 'next/link';
-import { actualizarNotificacion, registrarIngreso } from '../action';
-import { ModalRenovar } from './ModalRenovar';
-import { AiOutlineClose } from 'react-icons/ai';
-import { toast } from 'sonner';
-import moment from 'moment-timezone';
-import { TiUserDelete } from 'react-icons/ti';
-import { useSession } from 'next-auth/react';
-import { ModalConfirmar } from './ModalConfirmar';
-import Image from 'next/image';
-import { Usuario } from './Usuario';
+import { ModalUsuarioAdm } from "./ModalUsuarioAdm";
+import Link from "next/link";
+import { actualizarNotificacion, registrarIngreso } from "../action";
+import { ModalRenovar } from "./ModalRenovar";
+import { AiOutlineClose } from "react-icons/ai";
+import { toast } from "sonner";
+import moment from "moment-timezone";
+import { TiUserDelete } from "react-icons/ti";
+import { useSession } from "next-auth/react";
+import { ModalConfirmar } from "./ModalConfirmar";
+import Image from "next/image";
+import { Usuario } from "./Usuario";
 
 export const Usuarios = () => {
+  const [estado, setEstado] = useState("Todos");
+  const [usuarios, setUsuarios] = useState();
+  const [usuariosFilter, setUsuariosFilter] = useState();
+  const [usuario, setUsuario] = useState();
+  const [showModal, setShowModal] = useState(false);
+  const [showModal2, setShowModal2] = useState(false);
+  const [showModal3, setShowModal3] = useState(false);
+  const [idEvento, setIdEvento] = useState();
+  const [tipo, setTipo] = useState();
+  const [info, setInfo] = useState({});
+  const [hora, setHora] = useState(new Date().getHours());
+  const { data: session } = useSession();
+  const [autorizado, setAutorizado] = useState(false);
+  const [listaEspera, setListaEspera] = useState(0);
 
-    const [estado, setEstado] = useState("Todos")
-    const [usuarios, setUsuarios] = useState()
-    const [usuariosFilter, setUsuariosFilter] = useState()
-    const [usuario, setUsuario] = useState()
-    const [showModal, setShowModal] = useState(false)
-    const [showModal2, setShowModal2] = useState(false)
-    const [showModal3, setShowModal3] = useState(false)
-    const [idEvento, setIdEvento] = useState()
-    const [tipo, setTipo] = useState()
-    const [info, setInfo] = useState({})
-    const [hora, setHora] = useState(new Date().getHours())
-    const { data: session } = useSession()
-    const [autorizado, setAutorizado] = useState(false)
-    const [listaEspera, setListaEspera] = useState(0)
+  useEffect(() => {
+    const tamaño = usuariosFilter?.filter((e) => {
+      if (e.ingresoApp === "Solicitar Ingreso") {
+        return true;
+      }
+      return false;
+    }).length;
 
+    setListaEspera(tamaño || 0);
+  }, [usuariosFilter]);
 
-    useEffect(() => {
+  useEffect(() => {
+    const getSupabaseOficial = async () => {
+      const { data } = await supabaseClient
+        .from("usuarios")
+        .select("*")
+        .match({ email: session?.user?.email })
+        .single();
 
-        const tamaño = usuariosFilter?.filter(e => {
-            if (e.ingresoApp == "Solicitar Ingreso") {
-                // setListaEspera(ant => ant + 1)
-                return true
-            } else return false
-        }).length
-
-        setListaEspera(tamaño);
-    }, [usuariosFilter])
-
-
-
-    useEffect(() => {
-
-        const getSupabaseOficial = async () => {
-            let data = await supabaseClient
-                .from("usuarios")
-                .select("*")
-                .match({ email: session?.user?.email }).single();
-
-            setUsuario(data.data);
-        }
-
-        getSupabaseOficial()
-    }, [session?.user?.email, usuario])
-
-    useEffect(() => {
-
-        if (usuario?.role == "admin") {
-            setAutorizado(true)
-        }
-    }, [usuario?.role])
-
-
-
-
-    useEffect(() => {
-        const getSupabaseOficial = async () => {
-            let data = await supabaseClient
-                .from("usuarios")
-                .select("*").order('id', { ascending: true })
-
-
-            setUsuarios(data.data)
-            setUsuariosFilter(data.data)
-        }
-
-
-        getSupabaseOficial()
-
-        const channelUsuarios = supabaseClient
-            .channel('usuarios')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'usuarios' }, (payload) => {
-
-                if (payload.eventType == "INSERT") {
-
-
-                    return setUsuariosFilter((antContenido) => [payload.new, ...antContenido])
-
-
-                } else if (payload.eventType == 'UPDATE') {
-
-
-                    return setUsuariosFilter((antContenido) => antContenido.map((elem) => {
-                        if (elem.id == payload.new.id) {
-                            elem = payload.new
-                        }
-
-                        return elem;
-                    }))
-
-
-
-                } else if (payload.eventType == 'DELETE') {
-
-                    return setUsuariosFilter(antContenido => antContenido.filter((elem) => elem.id !== payload.old.id))
-
-                }
-            })
-            .subscribe()
-
-
-        return () => {
-
-            supabaseClient.removeChannel(supabaseClient.channel(channelUsuarios))
-        }
-
-    }, [])
-
-    const getUsuarios = async () => {
-        let data = await supabaseClient
-            .from("usuarios")
-            .select("*").order('id', { ascending: true })
-
-
-        setUsuarios(data.data)
-    }
-
-    const establecerFecha = (fecha1) => {
-
-
-
-        if (fecha1 != null) {
-
-            // var fecha2 = moment(new Date().toLocaleDateString().split('/').reverse().join('/'));
-
-            let fecha2 = moment().tz("America/Argentina/Salta")
-
-            return Math.abs(fecha2.diff(fecha1.split('/').reverse().join('/'), 'days'))
-        } else
-            return 1
-    }
-
-    let inputHandler = (e) => {
-
-        getUsuarios()
-
-        const searchUser = usuarios.filter((el) => {
-
-            let regexp = /[0-9]/gi;
-
-            let regexp2 = /[a-zA-Z]/gi;
-            let matches = e.target.value.match(regexp);
-            let matches2 = e.target.value.match(regexp2);
-
-            // console.log(matches);
-            console.log(matches2);
-
-            //if no input the return the original
-            if (e.target.value === '') {
-                return el;
-            }
-            //return the item which contains the user input
-            else {
-
-                if (matches == null || matches2 != null) {
-                    return el.nombre.toLowerCase().includes(e.target.value.toLowerCase())
-                } else
-                    return String(el.dni).includes(e.target.value)
-
-
-            }
-        })
-
-        setUsuariosFilter(searchUser)
+      setUsuario(data);
     };
 
+    if (session?.user?.email) {
+      getSupabaseOficial();
+    }
+  }, [session?.user?.email]);
 
+  useEffect(() => {
+    if (usuario?.role === "admin") {
+      setAutorizado(true);
+    }
+  }, [usuario?.role]);
 
-    return (
-        <div className="relative flex flex-col w-full h-full text-gray-700 bg-gray-600 shadow-md  bg-clip-border ">
-            <div className="relative  text-gray-700 bg-gray-600 rounded-none bg-clip-border ">
-                <div className="flex mx-8 my-2 items-center justify-between gap-8  h-full">
-                    <div>
-                        <h5
-                            className="block font-sans text-xl antialiased font-semibold leading-snug tracking-normal text-white">
-                            Lista de Miembros
-                        </h5>
-                    </div>
-                    <div className="flex flex-col gap-2 shrink-0 sm:flex-row">
-                        <button
-                            className="select-none rounded-lg border border-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-white transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                            type="button"
-                            onClick={() => window.location.reload()}
-                        >
-                            Refrescar
-                        </button>
-                        <button
-                            onClick={() => {
-                                setShowModal(true), setInfo({
-                                    tipo: "Agregar",
-                                    nombre: "",
-                                    email: "",
-                                    plan: "Elige el Plan"
+  useEffect(() => {
+    const getSupabaseOficial = async () => {
+      const { data } = await supabaseClient
+        .from("usuarios")
+        .select("*")
+        .order("id", { ascending: true });
 
-                                })
-                            }}
-                            className="flex select-none items-center gap-3 rounded-lg bg-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                            type="button">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
-                                strokeWidth="2" className="w-4 h-4">
-                                <path
-                                    d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z">
-                                </path>
-                            </svg>
-                            Agregar Miembro
-                        </button>
-                    </div>
-                </div>
-                <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-                    <div className="w-full overflow-hidden md:w-max ml-[25px]">
-                        <nav>
-                            <ul role="tablist" className="relative flex flex-row p-1 rounded-lg bg-blue-gray-50 bg-opacity-60 w-full">
-                                <li role="tab"
-                                    onClick={() => setEstado("Todos")}
-                                    className={`relative flex items-center justify-center w-full h-full px-2 py-1 font-sans text-base antialiased font-normal leading-relaxed text-center bg-transparent cursor-pointer      select-none text-black ${estado == 'Todos' ? 'bg-white/80 font-semibold' : 'bg-white/10'}`}
-                                    data-value="all">
+      setUsuarios(data);
+      setUsuariosFilter(data);
+    };
 
-                                    <div className="z-20 text-inherit">
-                                        &nbsp;&nbsp;Todos&nbsp;&nbsp;
-                                    </div>
+    getSupabaseOficial();
 
+    const channelUsuarios = supabaseClient
+      .channel("usuarios")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "usuarios" },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            setUsuariosFilter((antContenido) => [
+              payload.new,
+              ...(antContenido || []),
+            ]);
+          } else if (payload.eventType === "UPDATE") {
+            setUsuariosFilter((antContenido) =>
+              antContenido?.map((elem) => {
+                if (elem.id === payload.new.id) {
+                  return payload.new;
+                }
+                return elem;
+              })
+            );
+          } else if (payload.eventType === "DELETE") {
+            setUsuariosFilter((antContenido) =>
+              antContenido?.filter((elem) => elem.id !== payload.old.id)
+            );
+          }
+        }
+      )
+      .subscribe();
 
-                                </li>
-                                <li role="tab"
-                                    onClick={() => setEstado("Activos")}
-                                    className={`relative flex items-center justify-center w-full h-full px-2 py-1 font-sans text-base antialiased font-normal leading-relaxed text-center bg-transparent cursor-pointer  select-none text-black ${estado == 'Activos' ? 'bg-white/80 font-semibold' : 'bg-white/10'}`}
-                                    data-value="all">
+    return () => {
+      supabaseClient.removeChannel(channelUsuarios);
+    };
+  }, []);
 
-                                    <div className="z-20 text-inherit">
-                                        &nbsp;&nbsp;Activos&nbsp;&nbsp;
-                                    </div>
+  const getUsuarios = async () => {
+    const { data } = await supabaseClient
+      .from("usuarios")
+      .select("*")
+      .order("id", { ascending: true });
 
+    setUsuarios(data);
+  };
 
-                                </li>
-                                <li role="tab"
-                                    onClick={() => setEstado("Inactivos")}
-                                    className={`relative flex items-center justify-center w-full h-full px-2 py-1 font-sans text-base antialiased font-normal leading-relaxed text-center bg-transparent cursor-pointer  select-none text-black ${estado == 'Inactivos' ? 'bg-white/80 font-semibold' : 'bg-white/10'}`}
-                                    data-value="all">
+  const establecerFecha = (fecha1) => {
+    if (fecha1) {
+      let fecha2 = moment().tz("America/Argentina/Salta");
+      return Math.abs(
+        fecha2.diff(fecha1.split("/").reverse().join("/"), "days")
+      );
+    }
+    return 1;
+  };
 
-                                    <div className="z-20 text-inherit">
-                                        &nbsp;&nbsp;Inactivos&nbsp;&nbsp;
-                                    </div>
+  const inputHandler = (e) => {
+    getUsuarios();
+    const searchUser = usuarios?.filter((el) => {
+      const regexp = /[0-9]/gi;
+      const regexp2 = /[a-zA-Z]/gi;
+      const matches = e.target.value.match(regexp);
+      const matches2 = e.target.value.match(regexp2);
 
+      if (e.target.value === "") {
+        return el;
+      } else {
+        if (matches == null || matches2 != null) {
+          return el.nombre.toLowerCase().includes(e.target.value.toLowerCase());
+        }
+        return String(el.dni).includes(e.target.value);
+      }
+    });
 
-                                </li>
+    setUsuariosFilter(searchUser);
+  };
 
-                                <li role="tab"
-                                    onClick={() => setEstado("Lista")}
-                                    className={`relative flex items-center justify-center w-full  text-nowrap h-full   font-sans text-base antialiased font-normal leading-relaxed ml-[100px] bg-transparent cursor-pointer  select-none text-black ${estado == 'Lista' ? 'bg-white/80 font-semibold' : 'bg-white/10'}`}
-                                    data-value="all">
-                                    <h2 type="text" id="hs-trailing-button-add-on" name="hs-trailing-button-add-on" className="py-2 px-4 block w-full border-gray-200 shadow-sm rounded-s-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" >
-                                        Lista de Ingreso
-                                    </h2>
-                                    <button type="button" className={`py-2  px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold  border border-transparent  text-white  focus:outline-none  disabled:opacity-50 disabled:pointer-events-none ${listaEspera == 0 ? 'bg-black/30 font-semibold' : 'bg-blue-600 animate-ping2'}`}>
-                                        {listaEspera}
-                                    </button>
-                                    {/* 
-                                    Lista de Ingreso <span className='border-[2px] border-black translate-x-1/2 relative px-2 h-full w-full'> {listaEspera}</span> */}
-
-
-
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                    <div className="w-full md:w-72 mr-4">
-                        <div className="relative h-10 w-full min-w-[100px] ">
-                            <div className="absolute grid w-5 h-5 top-2/4 right-3 -translate-y-2/4 place-items-center text-blue-gray-500">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
-                                    stroke="currentColor" aria-hidden="true" className="w-5 h-5 text-white">
-                                    <path strokeLinecap="round" strokeLinejoin="round"
-                                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path>
-                                </svg>
+  return (
+    <div className="flex flex-col w-full h-full text-gray-100 bg-gray-900 shadow-2xl rounded-xl">
+      <div className="bg-gray-800 p-6 rounded-t-xl">
+        <div className="flex items-center justify-between gap-6 mx-4 mb-4">
+          <h5 className="text-2xl font-bold text-white tracking-tight">
+            Lista de Miembros
+          </h5>
+          <div className="flex gap-3">
+            <button
+              className="rounded-lg bg-gray-700 text-gray-100 px-4 py-2 text-sm font-medium hover:bg-gray-600 focus:ring-2 focus:ring-gray-500 transition duration-200"
+              type="button"
+              onClick={() => window.location.reload()}
+            >
+              Refrescar
+            </button>
+            <button
+              onClick={() => {
+                setShowModal(true);
+                setInfo({
+                  tipo: "Agregar",
+                  nombre: "",
+                  email: "",
+                  plan: "Elige el Plan",
+                });
+              }}
+              className="flex items-center gap-2 rounded-lg bg-blue-600 text-gray-100 px-4 py-2 text-sm font-medium hover:bg-blue-500 focus:ring-2 focus:ring-blue-400 transition duration-200"
+              type="button"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-4 h-4"
+              >
+                <path d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z"></path>
+              </svg>
+              Agregar Miembro
+            </button>
+          </div>
+        </div>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mx-4">
+          <div className="w-full md:w-max">
+            <nav>
+              <ul className="flex flex-row gap-2 p-1 bg-gray-700 rounded-lg">
+                {["Todos", "Activos", "Inactivos"].map((tab) => (
+                  <li
+                    key={tab}
+                    onClick={() => setEstado(tab)}
+                    className={`flex-1 text-center py-2 px-4 rounded-md cursor-pointer text-sm font-medium transition duration-200 ${
+                      estado === tab
+                        ? "bg-blue-600 text-gray-100"
+                        : "bg-gray-600 text-gray-200 hover:bg-gray-500"
+                    }`}
+                  >
+                    {tab}
+                  </li>
+                ))}
+                <li
+                  onClick={() => setEstado("Lista")}
+                  className={`flex items-center gap-2 py-2 px-4 rounded-md cursor-pointer text-sm font-medium transition duration-200 ${
+                    estado === "Lista"
+                      ? "bg-blue-600 text-gray-100"
+                      : "bg-gray-600 text-gray-200 hover:bg-gray-500"
+                  }`}
+                >
+                  Lista de Ingreso
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs ${
+                      listaEspera > 0 ? "bg-blue-500" : "bg-gray-500"
+                    }`}
+                  >
+                    {listaEspera}
+                  </span>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div className="w-full md:w-80">
+            <div className="relative">
+              <input
+                className="w-full rounded-lg bg-gray-700 text-gray-100 px-4 py-2 text-sm border border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none transition duration-200 placeholder-gray-400"
+                onChange={inputHandler}
+                placeholder="Buscar por nombre o DNI"
+              />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-5 h-5 text-gray-400 absolute right-3 top-1/2 transform -translate-y-1/2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="flex-1 px-4 py-6 bg-gray-900">
+        <div className="max-h-[1200px] overflow-y-auto">
+          <table className="w-full text-left table-auto bg-gray-900">
+            <thead>
+              <tr className="bg-gray-700 sticky top-0">
+                <th className="p-4 border-b border-gray-600">
+                  <p className="text-sm font-medium text-gray-200">Miembro</p>
+                </th>
+                <th className="p-4 border-b border-gray-600">
+                  <p className="text-sm font-medium text-gray-200">
+                    {estado === "Lista" ? "" : "Plan"}
+                  </p>
+                </th>
+                <th className="p-4 border-b border-gray-600">
+                  <p className="text-sm font-medium text-gray-200">
+                    {estado === "Lista" ? "" : "Estado"}
+                  </p>
+                </th>
+                <th className="p-4 border-b border-gray-600">
+                  <p className="text-sm font-medium text-gray-200">
+                    {estado === "Lista" ? "" : "Fecha de Pago"}
+                  </p>
+                </th>
+                <th className="p-4 border-b border-gray-600 w-12"></th>
+                <th className="p-4 border-b border-gray-600 w-12"></th>
+                <th className="p-4 border-b border-gray-600 w-36"></th>
+                <th className="p-4 border-b border-gray-600 w-12"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {usuariosFilter && estado === "Activos"
+                ? usuariosFilter
+                    ?.filter((e) => {
+                      if (e.tipoPlan === "Plan x2") {
+                        return e.dias < 8;
+                      } else if (e.tipoPlan === "Plan x3") {
+                        return e.dias < 12;
+                      } else if (e.tipoPlan === "Plan Libre") {
+                        return e.dias < 16;
+                      }
+                      return false;
+                    })
+                    .map((elem, index) => (
+                      <Usuario
+                        key={index}
+                        elem={elem}
+                        setShowModal3={setShowModal3}
+                        setTipo={setTipo}
+                        setIdEvento={setIdEvento}
+                        setShowModal2={setShowModal2}
+                        setInfo={setInfo}
+                        autorizado={autorizado}
+                        setShowModal={setShowModal}
+                      />
+                    ))
+                : estado === "Inactivos"
+                ? usuariosFilter
+                    ?.filter((e) => {
+                      if (e.tipoPlan === "Plan x2") {
+                        return e.dias >= 8;
+                      } else if (e.tipoPlan === "Plan x3") {
+                        return e.dias >= 12;
+                      } else if (e.tipoPlan === "Plan Libre") {
+                        return e.dias >= 16;
+                      }
+                      return false;
+                    })
+                    .map((elem, index) => (
+                      <Usuario
+                        key={index}
+                        elem={elem}
+                        setShowModal3={setShowModal3}
+                        setTipo={setTipo}
+                        setIdEvento={setIdEvento}
+                        setShowModal2={setShowModal2}
+                        setInfo={setInfo}
+                        autorizado={autorizado}
+                        setShowModal={setShowModal}
+                      />
+                    ))
+                : estado === "Lista"
+                ? usuariosFilter
+                    ?.filter((e) => e.ingresoApp === "Solicitar Ingreso")
+                    .map((elem, index) => (
+                      <tr
+                        key={index}
+                        className="even:bg-gray-800 hover:bg-gray-700 transition duration-200"
+                      >
+                        <td className="p-4 border-b border-gray-600">
+                          <div className="flex items-center gap-3">
+                            <Image
+                              width={36}
+                              height={36}
+                              src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg"
+                              alt="John Michael"
+                              className="rounded-full object-cover"
+                            />
+                            <div className="flex flex-col">
+                              <p className="text-sm font-medium text-gray-100">
+                                {elem.nombre}
+                              </p>
+                              <p className="text-sm text-gray-400">
+                                {elem.dni}
+                              </p>
                             </div>
-                            <input
-                                className="peer h-full w-full rounded-[7px] border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-white outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
-                                onChange={inputHandler}
-                                placeholder=" " />
-                            <label
-                                className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-white transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-white before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-white after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-white peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:!border-gray-900 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:!border-gray-900 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
-                                Buscar
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className=" px-0 overflow-scroll h-auto mt-[90px] ">
-                <table className="w-full  text-left table-auto min-w-max">
-                    <thead>
-                        <tr>
-                            <th className="p-4 border-y border-blue-gray-100 bg-blue-gray-50/50">
-                                <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                                    Miembro
-                                </p>
-                            </th>
-                            <th className={`p-4 border-y border-blue-gray-100 bg-blue-gray-50/50 `}>
-                                <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70  ">
-                                    {estado == "Lista" ? "" : "Plan"}
-                                </p>
-                            </th>
-                            <th className={`p-4 border-y border-blue-gray-100 bg-blue-gray-50/50 `}>
-                                <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                                    {estado == "Lista" ? "" : "Estado"}
-                                </p>
-                            </th>
-                            <th className={`p-4 border-y border-blue-gray-100 bg-blue-gray-50/50 `}>
-                                <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                                    {estado == "Lista" ? "" : "Fecha de Pago"}
-                                </p>
-                            </th>
-                            <th className={`p-4 border-y border-blue-gray-100 bg-blue-gray-50/50 `}>
-                                <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                                </p>
-                            </th>
-                            <th className={`p-4 border-y border-blue-gray-100 bg-blue-gray-50/50 `}>
-                                <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                                </p>
-                            </th>
-                            <th className={`p-4 border-y border-blue-gray-100 bg-blue-gray-50/50 `}>
-                                <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                                </p>
-                            </th>
-                            <th className={`p-4 border-y border-blue-gray-100 bg-blue-gray-50/50 `}>
-                                <p className="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                                </p>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {usuariosFilter && estado == 'Activos' ? (usuariosFilter?.filter(e => {
-                            if (e.tipoPlan == "Plan x2") {
-                                if (e.dias < 8)
-                                    return true
-                                else return false
-                            } else if (e.tipoPlan == "Plan x3") {
-                                if (e.dias < 12)
-                                    return true
-                                else return false
-                            } else if (e.tipoPlan == "Plan Libre") {
-                                if (e.dias < 16)
-                                    return true
-                                else return false
-                            }
-                        }).map((elem, index) => (
-                            <Usuario key={index} elem={elem} setShowModal3={setShowModal3} setTipo={setTipo} setIdEvento={setIdEvento} setShowModal2={setShowModal2} setInfo={setInfo} autorizado={autorizado} setShowModal={setShowModal} />
-                        ))) : estado == 'Inactivos' ? (usuariosFilter?.filter(e => {
-                            if (e.tipoPlan == "Plan x2") {
-                                if (e.dias >= 8)
-                                    return true
-                                else return false
-                            } else if (e.tipoPlan == "Plan x3") {
-                                if (e.dias >= 12)
-                                    return true
-                                else return false
-                            } else if (e.tipoPlan == "Plan Libre") {
-                                if (e.dias >= 16)
-                                    return true
-                                else return false
-                            }
-                        }).map((elem, index) => (
-                            <Usuario key={index} elem={elem} setShowModal3={setShowModal3} setTipo={setTipo} setIdEvento={setIdEvento} setShowModal2={setShowModal2} setInfo={setInfo} autorizado={autorizado} setShowModal={setShowModal} />
-                        ))) : estado == "Lista" ? (usuariosFilter?.filter(e => {
-                            if (e.ingresoApp == "Solicitar Ingreso") {
-                                return true
-                            } else return false
-                        }).map((elem, index) => (
-                            <tr key={index}>
-                                <td className="p-4 border-b border-blue-gray-50">
-                                    <div className="flex items-center gap-3">
-                                        <Image width={0} height={0} src="https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg"
-                                            alt="John Michael" className="relative inline-block h-9 w-9 !rounded-full object-cover object-center" />
-                                        <div className="flex flex-col">
-
-                                            <p
-                                                className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900 opacity-70">
-                                                {elem.nombre}
-                                            </p>
-                                            <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                {elem.dni}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="p-4 border-b border-blue-gray-50 ">
+                          </div>
+                        </td>
+                        <td className="p-4 border-b border-gray-600">
+                          <button
+                            onClick={async () => {
+                              await actualizarNotificacion(
+                                "Confirmar Ingreso",
+                                elem.id,
+                                elem.dias + 1
+                              );
+                              toast.custom(
+                                (t) => (
+                                  <div className="bg-gray-800 p-4 rounded-lg text-gray-100 relative shadow-xl border border-gray-700">
                                     <button
-                                        onClick={async () => {
-                                            await actualizarNotificacion("Confirmar Ingreso", elem.id, elem.dias + 1), toast.custom((t) => (
-                                                <div className='bg-white p-4 rounded-md text-black relative'>
-                                                    <button className='' onClick={() => toast.dismiss(t)}><AiOutlineClose className='w-4 h-4  absolute left-[92%] top-[10%]' /></button>
-                                                    <span className='text-green-800'>{elem.nombre}</span> Ya puede ingresar al Gym
-                                                </div>
-                                            ), {
-                                                position: 'top-center',
-                                                duration: 5000
-                                            })
-                                        }
-                                        }
-                                        className="relative  min-h-[50px]  min-w-[60px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900"
-                                        type="button">
-                                        <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 text-white/80 border-[1px] rounded-md border-gray-800 p-2 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
-                                            Permitir Ingreso
-                                        </span>
-                                    </button>
-                                </td>
-                                <td className="p-4 border-b border-blue-gray-50 ">
-                                    <button
-                                        onClick={async () => {
-                                            await actualizarNotificacion("Rechazar Ingreso", elem.id, elem.dias + 1), toast.custom((t) => (
-                                                <div className='bg-white p-4 rounded-md text-black relative'>
-                                                    <button className='' onClick={() => toast.dismiss(t)}><AiOutlineClose className='w-4 h-4  absolute left-[92%] top-[10%]' /></button>
-                                                    <span className='text-green-800'>{elem.nombre}</span> Se cancelo el ingreso al gym
-                                                </div>
-                                            ), {
-                                                position: 'top-center',
-                                                duration: 5000
-                                            })
-                                        }
-                                        }
-                                        className="relative  min-h-[50px]  min-w-[60px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900"
-                                        type="button">
-                                        <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 text-white/80 border-[1px] rounded-md border-gray-800 p-2 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
-                                            Rechazar Ingreso
-                                        </span>
-                                    </button>
-                                </td>
-                                <td className="p-4 border-b border-blue-gray-50 invisible">
-                                    <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                        23/04/18
-                                    </p>
-                                </td>
-                                <td className="p-4 border-b border-blue-gray-50 invisible">
-                                    <button
-                                        onClick={() => {
-                                            setShowModal(true),
-                                                setInfo({
-                                                    tipo: "Modificar",
-                                                    nombre: String(elem.nombre),
-                                                    email: String(elem.email),
-                                                    id: elem.id,
-                                                    dni: elem.dni,
-                                                    telefono: elem.telefono,
-                                                    edad: elem.edad,
-                                                    plan: String(elem.tipoPlan),
-                                                    dias: elem.dias,
-                                                    // fechaCumpleanos: elem.fechaCumpleanos
-                                                })
-                                        }}
-                                        className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                                        type="button">
-                                        <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
-                                                className="w-4 h-4">
-                                                <path
-                                                    d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z">
-                                                </path>
-                                            </svg>
-                                        </span>
-                                    </button>
-                                </td>
-
-                                <td className="p-4 border-b border-blue-gray-50 invisible">
-                                    <Link
-                                        rel="noopener noreferrer"
-                                        target="_blank"
-                                        // href="https://wa.me/+543878256529?text=Escribenos para poder orar por ti"
-                                        href={`https://wa.me/+54${elem.telefono}`}
-                                        className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                                      className=""
+                                      onClick={() => toast.dismiss(t)}
                                     >
-                                        <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                                            <IoLogoWhatsapp className='w-7 h-7 transition-all hover:scale-110  focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85]' />
-                                        </span>
-                                    </Link>
-                                </td>
+                                      <AiOutlineClose className="w-4 h-4 absolute right-2 top-2 text-gray-400" />
+                                    </button>
+                                    <span className="text-green-500">
+                                      {elem.nombre}
+                                    </span>{" "}
+                                    Ya puede ingresar al Gym
+                                  </div>
+                                ),
+                                {
+                                  position: "top-center",
+                                  duration: 5000,
+                                }
+                              );
+                            }}
+                            className="px-4 py-2 bg-green-600 text-gray-100 rounded-lg text-sm font-medium hover:bg-green-500 transition duration-200"
+                            type="button"
+                          >
+                            Permitir Ingreso
+                          </button>
+                        </td>
+                        <td className="p-4 border-b border-gray-600">
+                          <button
+                            onClick={async () => {
+                              await actualizarNotificacion(
+                                "Rechazar Ingreso",
+                                elem.id,
+                                elem.dias + 1
+                              );
+                              toast.custom(
+                                (t) => (
+                                  <div className="bg-gray-800 p-4 rounded-lg text-gray-100 relative shadow-xl border border-gray-700">
+                                    <button
+                                      className=""
+                                      onClick={() => toast.dismiss(t)}
+                                    >
+                                      <AiOutlineClose className="w-4 h-4 absolute right-2 top-2 text-gray-400" />
+                                    </button>
+                                    <span className="text-red-500">
+                                      {elem.nombre}
+                                    </span>{" "}
+                                    Se canceló el ingreso al gym
+                                  </div>
+                                ),
+                                {
+                                  position: "top-center",
+                                  duration: 5000,
+                                }
+                              );
+                            }}
+                            className="px-4 py-2 bg-red-600 text-gray-100 rounded-lg text-sm font-medium hover:bg-red-500 transition duration-200"
+                            type="button"
+                          >
+                            Rechazar Ingreso
+                          </button>
+                        </td>
+                        <td className="p-4 border-b border-gray-600 hidden">
+                          <p className="text-sm text-gray-100">23/04/18</p>
+                        </td>
+                        <td className="p-4 border-b border-gray-600 hidden w-12">
+                          <button
+                            onClick={() => {
+                              setShowModal(true);
+                              setInfo({
+                                tipo: "Modificar",
+                                nombre: String(elem.nombre),
+                                email: String(elem.email),
+                                id: elem.id,
+                                dni: elem.dni,
+                                telefono: elem.telefono,
+                                edad: elem.edad,
+                                plan: String(elem.tipoPlan),
+                                dias: elem.dias,
+                              });
+                            }}
+                            className="p-2 bg-gray-700 text-gray-100 rounded-lg hover:bg-gray-600 transition duration-200"
+                            type="button"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="currentColor"
+                              className="w-4 h-4"
+                            >
+                              <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z"></path>
+                            </svg>
+                          </button>
+                        </td>
+                        <td className="p-4 border-b border-gray-600 hidden w-12">
+                          <Link
+                            rel="noopener noreferrer"
+                            target="_blank"
+                            href={`https://wa.me/+54${elem.telefono}`}
+                            className="p-2 bg-green-600 text-gray-100 rounded-lg hover:bg-green-500 transition duration-200"
+                          >
+                            <IoLogoWhatsapp className="w-5 h-5" />
+                          </Link>
+                        </td>
+                        <td className="p-4 border-b border-gray-600 hidden w-36">
+                          {elem.tipoPlan === "Plan x2" &&
+                          elem.dias < 8 &&
+                          establecerFecha(elem.fechaIngreso) >= 1 ? (
+                            <button
+                              onClick={async () => {
+                                await registrarIngreso(elem.dias + 1, elem.id);
+                                toast.custom(
+                                  (t) => (
+                                    <div className="bg-gray-800 p-4 rounded-lg text-gray-100 relative shadow-xl border border-gray-700">
+                                      <button
+                                        className=""
+                                        onClick={() => toast.dismiss(t)}
+                                      >
+                                        <AiOutlineClose className="w-4 h-4 absolute right-2 top-2 text-gray-400" />
+                                      </button>
+                                      <span className="text-green-500">
+                                        {elem.nombre}
+                                      </span>{" "}
+                                      Ya puede ingresar al Gym
+                                    </div>
+                                  ),
+                                  {
+                                    position: "top-center",
+                                    duration: 5000,
+                                  }
+                                );
+                              }}
+                              className="px-4 py-2 bg-blue-600 text-gray-100 rounded-lg text-sm font-medium hover:bg-blue-500 transition duration-200"
+                              type="button"
+                            >
+                              Registrar Ingreso
+                            </button>
+                          ) : elem.tipoPlan === "Plan x2" &&
+                            elem.dias < 8 &&
+                            establecerFecha(elem.fechaIngreso) === 0 ? (
+                            <button
+                              onClick={() =>
+                                toast.custom(
+                                  (t) => (
+                                    <div className="bg-gray-800 p-4 rounded-lg text-gray-100 relative shadow-xl border border-gray-700">
+                                      <button
+                                        className=""
+                                        onClick={() => toast.dismiss(t)}
+                                      >
+                                        <AiOutlineClose className="w-4 h-4 absolute right-2 top-2 text-gray-400" />
+                                      </button>
+                                      <span className="text-green-500">
+                                        {elem.nombre}
+                                      </span>{" "}
+                                      Ya ingresó al GYM
+                                    </div>
+                                  ),
+                                  {
+                                    position: "top-center",
+                                    duration: 5000,
+                                  }
+                                )
+                              }
+                              className="px-4 py-2 bg-green-600 text-gray-100 rounded-lg text-sm font-medium flex items-center gap-2"
+                              type="button"
+                            >
+                              Ya ingresó
+                              <span className="text-gray-200">
+                                {elem.horaIngreso}
+                              </span>
+                            </button>
+                          ) : elem.dias >= 8 && elem.tipoPlan === "Plan x2" ? (
+                            <button
+                              onClick={() => {
+                                setShowModal2(true);
+                                setInfo({
+                                  nombre: String(elem.nombre),
+                                  id: elem.id,
+                                  dni: elem.dni,
+                                  plan: String(elem.tipoPlan),
+                                });
+                              }}
+                              className="px-4 py-2 bg-yellow-600 text-gray-100 rounded-lg text-sm font-medium hover:bg-yellow-500 transition duration-200"
+                              type="button"
+                            >
+                              Renovar Plan
+                            </button>
+                          ) : null}
 
-                                <td className="p-4 border-b border-blue-gray-50 invisible">
+                          {elem.tipoPlan === "Plan x3" &&
+                          elem.dias < 12 &&
+                          establecerFecha(elem.fechaIngreso) >= 1 ? (
+                            <button
+                              onClick={async () => {
+                                await registrarIngreso(elem.dias + 1, elem.id);
+                                toast.custom(
+                                  (t) => (
+                                    <div className="bg-gray-800 p-4 rounded-lg text-gray-100 relative shadow-xl border border-gray-700">
+                                      <button
+                                        className=""
+                                        onClick={() => toast.dismiss(t)}
+                                      >
+                                        <AiOutlineClose className="w-4 h-4 absolute right-2 top-2 text-gray-400" />
+                                      </button>
+                                      <span className="text-green-500">
+                                        {elem.nombre}
+                                      </span>{" "}
+                                      Ya puede ingresar al Gym
+                                    </div>
+                                  ),
+                                  {
+                                    position: "top-center",
+                                    duration: 5000,
+                                  }
+                                );
+                              }}
+                              className="px-4 py-2 bg-blue-600 text-gray-100 rounded-lg text-sm font-medium hover:bg-blue-500 transition duration-200"
+                              type="button"
+                            >
+                              Registrar Ingreso
+                            </button>
+                          ) : establecerFecha(elem.fechaIngreso) === 0 &&
+                            elem.tipoPlan === "Plan x3" &&
+                            elem.dias < 12 ? (
+                            <button
+                              onClick={() =>
+                                toast.custom(
+                                  (t) => (
+                                    <div className="bg-gray-800 p-4 rounded-lg text-gray-100 relative shadow-xl border border-gray-700">
+                                      <button
+                                        className=""
+                                        onClick={() => toast.dismiss(t)}
+                                      >
+                                        <AiOutlineClose className="w-4 h-4 absolute right-2 top-2 text-gray-400" />
+                                      </button>
+                                      <span className="text-green-500">
+                                        {elem.nombre}
+                                      </span>{" "}
+                                      Ya ingresó al GYM
+                                    </div>
+                                  ),
+                                  {
+                                    position: "top-center",
+                                    duration: 5000,
+                                  }
+                                )
+                              }
+                              className="px-4 py-2 bg-green-600 text-gray-100 rounded-lg text-sm font-medium flex items-center gap-2"
+                              type="button"
+                            >
+                              Ya ingresó
+                              <span className="text-gray-200">
+                                {elem.horaIngreso}
+                              </span>
+                            </button>
+                          ) : elem.dias >= 12 && elem.tipoPlan === "Plan x3" ? (
+                            <button
+                              onClick={() => {
+                                setShowModal2(true);
+                                setInfo({
+                                  nombre: String(elem.nombre),
+                                  id: elem.id,
+                                  dni: elem.dni,
+                                  plan: String(elem.tipoPlan),
+                                });
+                              }}
+                              className="px-4 py-2 bg-yellow-600 text-gray-100 rounded-lg text-sm font-medium hover:bg-yellow-500 transition duration-200"
+                              type="button"
+                            >
+                              Renovar Plan
+                            </button>
+                          ) : null}
 
-                                    {
-                                        (elem.tipoPlan == 'Plan x2' && elem.dias < 8 && establecerFecha(elem.fechaIngreso) >= 1) ? (<button
-                                            onClick={async () => {
-                                                await registrarIngreso(elem.dias + 1, elem.id), toast.custom((t) => (
-                                                    <div className='bg-white p-4 rounded-md text-black relative'>
-                                                        <button className='' onClick={() => toast.dismiss(t)}><AiOutlineClose className='w-4 h-4  absolute left-[92%] top-[10%]' /></button>
-                                                        <span className='text-green-800'>{elem.nombre}</span> Ya puede ingresar al Gym
-                                                    </div>
-                                                ), {
-                                                    position: 'top-center',
-                                                    duration: 5000
-                                                })
-                                            }
-                                            }
-                                            className="relative  min-h-[50px]  min-w-[60px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900"
-                                            type="button">
-                                            <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 text-white/80 border-[1px] rounded-md border-gray-800 p-2 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
-                                                Registrar Ingreso
-                                            </span>
-                                        </button>) : (elem.tipoPlan == 'Plan x2' && elem.dias < 8 && establecerFecha(elem.fechaIngreso) == 0) ? ((<button
-                                            onClick={() =>
-                                                toast.custom((t) => (
-                                                    <div className='bg-white p-4 rounded-md text-black relative'>
-                                                        <button className='' onClick={() => toast.dismiss(t)}><AiOutlineClose className='w-4 h-4  absolute left-[92%] top-[10%]' /></button>
-                                                        <span className='text-green-800'>{elem.nombre}</span> Ya ingreso al GYM
-                                                    </div>
-                                                ), {
-                                                    position: 'top-center',
-                                                    duration: 5000
-                                                })
+                          {elem.tipoPlan === "Super Intenso" &&
+                          elem.dias < 16 &&
+                          establecerFecha(elem.fechaIngreso) >= 1 ? (
+                            <button
+                              onClick={async () => {
+                                await registrarIngreso(elem.dias + 1, elem.id);
+                                toast.custom(
+                                  (t) => (
+                                    <div className="bg-gray-800 p-4 rounded-lg text-gray-100 relative shadow-xl border border-gray-700">
+                                      <button
+                                        className=""
+                                        onClick={() => toast.dismiss(t)}
+                                      >
+                                        <AiOutlineClose className="w-4 h-4 absolute right-2 top-2 text-gray-400" />
+                                      </button>
+                                      <span className="text-green-500">
+                                        {elem.nombre}
+                                      </span>{" "}
+                                      Ya puede ingresar al Gym
+                                    </div>
+                                  ),
+                                  {
+                                    position: "top-center",
+                                    duration: 5000,
+                                  }
+                                );
+                              }}
+                              className="px-4 py-2 bg-blue-600 text-gray-100 rounded-lg text-sm font-medium hover:bg-blue-500 transition duration-200"
+                              type="button"
+                            >
+                              Registrar Ingreso
+                            </button>
+                          ) : establecerFecha(elem.fechaIngreso) === 0 &&
+                            elem.tipoPlan === "Super Intenso" &&
+                            elem.dias < 16 ? (
+                            <button
+                              onClick={() =>
+                                toast.custom(
+                                  (t) => (
+                                    <div className="bg-gray-800 p-4 rounded-lg text-gray-100 relative shadow-xl border border-gray-700">
+                                      <button
+                                        className=""
+                                        onClick={() => toast.dismiss(t)}
+                                      >
+                                        <AiOutlineClose className="w-4 h-4 absolute right-2 top-2 text-gray-400" />
+                                      </button>
+                                      <span className="text-green-500">
+                                        {elem.nombre}
+                                      </span>{" "}
+                                      Ya ingresó al GYM
+                                    </div>
+                                  ),
+                                  {
+                                    position: "top-center",
+                                    duration: 5000,
+                                  }
+                                )
+                              }
+                              className="px-4 py-2 bg-green-600 text-gray-100 rounded-lg text-sm font-medium flex items-center gap-2"
+                              type="button"
+                            >
+                              Ya ingresó
+                              <span className="text-gray-200">
+                                {elem.horaIngreso}
+                              </span>
+                            </button>
+                          ) : elem.dias >= 16 &&
+                            elem.tipoPlan === "Super Intenso" ? (
+                            <button
+                              onClick={() => {
+                                setShowModal2(true);
+                                setInfo({
+                                  nombre: String(elem.nombre),
+                                  id: elem.id,
+                                  dni: elem.dni,
+                                  plan: String(elem.tipoPlan),
+                                });
+                              }}
+                              className="px-4 py-2 bg-yellow-600 text-gray-100 rounded-lg text-sm font-medium hover:bg-yellow-500 transition duration-200"
+                              type="button"
+                            >
+                              Renovar Plan
+                            </button>
+                          ) : null}
+                        </td>
+                        <td className="p-4 border-b border-gray-600 hidden w-12"></td>
+                      </tr>
+                    ))
+                : usuariosFilter?.map((elem, index) => (
+                    <Usuario
+                      key={index}
+                      elem={elem}
+                      setShowModal3={setShowModal3}
+                      setTipo={setTipo}
+                      setIdEvento={setIdEvento}
+                      setShowModal2={setShowModal2}
+                      setInfo={setInfo}
+                      autorizado={autorizado}
+                      setShowModal={setShowModal}
+                    />
+                  ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-                                            }
-                                            className="relative  right-[5%] min-h-[50px]  min-w-[70px] select-none  font-sans text-xs font-medium uppercase  text-green-500 border-[1px]  rounded-md border-gray-800 p-2  transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none items-center text-center"
-                                            type="button">
-
-                                            Ya ingreso  <span className="relative border-l-[1px] border-gray-800 h-full py-4 px-1 text-center items-center"></span>   <span className="text-white">{elem.horaIngreso}</span>
-
-
-                                        </button>)) : (elem.dias >= 8 && elem.tipoPlan == 'Plan x2') ? (<button
-                                            onClick={() => {
-                                                setShowModal2(true),
-                                                    setInfo({
-
-                                                        nombre: String(elem.nombre),
-                                                        id: elem.id,
-                                                        dni: elem.dni,
-                                                        plan: String(elem.tipoPlan)
-                                                    })
-                                            }}
-                                            className="relative  right-[5%] min-h-[50px]  min-w-[70px] select-none  font-sans text-xs font-medium uppercase  text-green-500 border-[1px]  rounded-md border-gray-800 p-2  transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none items-center text-center"
-                                            type="button">
-
-                                            Renovar Plan     <span className={`text-white ${elem.ingreso == true ? 'block mt-1' : 'hidden'}`}>{(elem.horaIngreso)}</span>
-                                        </button>) : null
-                                    }
-
-                                    {
-                                        (elem.tipoPlan == 'Plan x3' && elem.dias < 12 && establecerFecha(elem.fechaIngreso) >= 1) ? (<button
-                                            onClick={async () => {
-                                                await registrarIngreso(elem.dias + 1, elem.id), toast.custom((t) => (
-                                                    <div className='bg-white p-4 rounded-md text-black relative'>
-                                                        <button className='' onClick={() => toast.dismiss(t)}><AiOutlineClose className='w-4 h-4  absolute left-[92%] top-[10%]' /></button>
-                                                        <span className='text-green-800'>{elem.nombre}</span> Ya puede ingresar al Gym
-                                                    </div>
-                                                ), {
-                                                    position: 'top-center',
-                                                    duration: 5000
-                                                })
-                                            }
-                                            }
-                                            className="relative  min-h-[50px]  min-w-[60px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900"
-                                            type="button">
-                                            <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 text-white/80 border-[1px] rounded-md border-gray-800 p-2 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
-                                                Registrar Ingreso
-                                            </span>
-                                        </button>) : (establecerFecha(elem.fechaIngreso) == 0 && elem.tipoPlan == 'Plan x3' && elem.dias < 12 ? ((<button
-                                            onClick={() =>
-                                                toast.custom((t) => (
-                                                    <div className='bg-white p-4 rounded-md text-black relative'>
-                                                        <button className='' onClick={() => toast.dismiss(t)}><AiOutlineClose className='w-4 h-4  absolute left-[92%] top-[10%]' /></button>
-                                                        <span className='text-green-800'>{elem.nombre}</span> Ya ingreso al GYM
-                                                    </div>
-                                                ), {
-                                                    position: 'top-center',
-                                                    duration: 5000
-                                                })
-
-                                            }
-                                            className="relative  right-[5%] min-h-[50px]  min-w-[70px] select-none  font-sans text-xs font-medium uppercase  text-green-500 border-[1px]  rounded-md border-gray-800 p-2  transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none items-center text-center"
-                                            type="button">
-
-                                            Ya ingreso  <span className="relative border-l-[1px] border-gray-800 h-full py-4 px-1 text-center items-center"></span>   <span className="text-white">{(elem.horaIngreso)}</span>
-
-
-                                        </button>)) : (elem.dias >= 12 && elem.tipoPlan == 'Plan x3') ? (<button
-                                            onClick={() => {
-                                                setShowModal2(true),
-                                                    setInfo({
-
-                                                        nombre: String(elem.nombre),
-                                                        id: elem.id,
-                                                        dni: elem.dni,
-                                                        plan: String(elem.tipoPlan)
-                                                    })
-                                            }}
-                                            className="relative  right-[5%] min-h-[50px]  min-w-[70px] select-none  font-sans text-xs font-medium uppercase  text-green-500 border-[1px]  rounded-md border-gray-800 p-2  transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none items-center text-center"
-                                            type="button">
-
-                                            Renovar Plan     <span className={`text-white ${establecerFecha(elem.fechaIngreso) == 0 ? 'block mt-1' : 'hidden'}`}>{(elem.horaIngreso)}</span>
-                                        </button>) : null
-                                        )
-                                    }
-
-                                    {
-                                        (elem.tipoPlan == 'Super Intenso' && elem.dias < 16 && establecerFecha(elem.fechaIngreso) >= 1) ? (<button
-                                            onClick={async () => {
-                                                await registrarIngreso(elem.dias + 1, elem.id), toast.custom((t) => (
-                                                    <div className='bg-white p-4 rounded-md text-black relative'>
-                                                        <button className='' onClick={() => toast.dismiss(t)}><AiOutlineClose className='w-4 h-4  absolute left-[92%] top-[10%]' /></button>
-                                                        <span className='text-green-800'>{elem.nombre}</span> Ya puede ingresar al Gym
-                                                    </div>
-                                                ), {
-                                                    position: 'top-center',
-                                                    duration: 5000
-                                                })
-                                            }
-                                            }
-                                            className="relative  min-h-[50px]  min-w-[60px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900"
-                                            type="button">
-                                            <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 text-white/80 border-[1px] rounded-md border-gray-800 p-2 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
-                                                Registrar Ingreso
-                                            </span>
-                                        </button>) : (establecerFecha(elem.fechaIngreso) == 0 && elem.tipoPlan == 'Super Intenso' && elem.dias < 16 ? ((<button
-                                            onClick={() =>
-                                                toast.custom((t) => (
-                                                    <div className='bg-white p-4 rounded-md text-black relative'>
-                                                        <button className='' onClick={() => toast.dismiss(t)}><AiOutlineClose className='w-4 h-4  absolute left-[92%] top-[10%]' /></button>
-                                                        <span className='text-green-800'>{elem.nombre}</span> Ya ingreso al GYM
-                                                    </div>
-                                                ), {
-                                                    position: 'top-center',
-                                                    duration: 5000
-                                                })
-
-                                            }
-                                            className="relative  right-[5%] min-h-[50px]  min-w-[70px] select-none  font-sans text-xs font-medium uppercase  text-green-500 border-[1px]  rounded-md border-gray-800 p-2  transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none items-center text-center"
-                                            type="button">
-
-                                            Ya ingreso  <span className="relative border-l-[1px] border-gray-800 h-full py-4 px-1 text-center items-center"></span>   <span className="text-white">{(elem.horaIngreso)}</span>
-
-
-                                        </button>)) : (elem.dias >= 16 && elem.tipoPlan == 'Super Intenso') ? (<button
-                                            onClick={() => {
-                                                setShowModal2(true),
-                                                    setInfo({
-
-                                                        nombre: String(elem.nombre),
-                                                        id: elem.id,
-                                                        dni: elem.dni,
-                                                        plan: String(elem.tipoPlan)
-                                                    })
-                                            }}
-                                            className="relative  right-[5%] min-h-[50px]  min-w-[70px] select-none  font-sans text-xs font-medium uppercase  text-green-500 border-[1px]  rounded-md border-gray-800 p-2  transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none items-center text-center"
-                                            type="button">
-
-                                            Renovar Plan     <span className={`text-white ${establecerFecha(elem.fechaIngreso) == 0 ? 'block mt-1' : 'hidden'}`}>{elem.horaIngreso}</span>
-                                        </button>) : null
-                                        )
-                                    }
-
-                                </td>
-
-
-
-                            </tr>
-                        ))) : usuariosFilter?.map((elem, index) => (
-
-                            <Usuario key={index} elem={elem} setShowModal3={setShowModal3} setTipo={setTipo} setIdEvento={setIdEvento} setShowModal2={setShowModal2} setInfo={setInfo} autorizado={autorizado} setShowModal={setShowModal} />
-
-                        ))
-                        }
-
-                    </tbody>
-                </table>
-                {/* <div className="flex items-center w-full justify-center   p-4 border-b border-blue-gray-50">
-
-                    <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                        23/04/18
-                    </p>
-                    <p className="block font-sans ml-[150px] text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                        23/04/18
-                    </p>
-                </div> */}
-            </div>
-
-            {
-                showModal && <ModalUsuarioAdm info={info} setShowModal={setShowModal} />
-            }
-
-
-            {
-                showModal2 && <ModalRenovar info={info} setShowModal2={setShowModal2} />
-            }
-
-            {
-                showModal3 && <ModalConfirmar tipo={tipo} setShowModal3={setShowModal3} idEvento={idEvento} />
-            }
-        </div >
-    )
-}
+      {showModal && <ModalUsuarioAdm info={info} setShowModal={setShowModal} />}
+      {showModal2 && <ModalRenovar info={info} setShowModal2={setShowModal2} />}
+      {showModal3 && (
+        <ModalConfirmar
+          tipo={tipo}
+          setShowModal3={setShowModal3}
+          idEvento={idEvento}
+        />
+      )}
+    </div>
+  );
+};
